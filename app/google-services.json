@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "95179258193",
+    "firebase_url": "https://placement-finder-app-default-rtdb.firebaseio.com",
+    "project_id": "placement-finder-app",
+    "storage_bucket": "placement-finder-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95179258193:android:242d6fb3992b8406893b70",
+        "android_client_info": {
+          "package_name": "com.faaiz.placementfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "95179258193-27r2es68fk3hf0pvbk3qma7pna0ah04i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.faaiz.placementfinder",
+            "certificate_hash": "abef2c814d3f7b26bb92d6dc45442ba82d4b357e"
+          }
+        },
+        {
+          "client_id": "95179258193-7u7dqlt1ap1k0838antbv2tt4ee6gfgh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDLib8RHdnGTf-fV7jYcMvDNTa76ojT9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "95179258193-7u7dqlt1ap1k0838antbv2tt4ee6gfgh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,223 @@
+# University Names
+Acharya Nagarjuna University
+Ahmedabad University (Id: U-0122)
+Anna University
+Anna University of Technology
+Anand Agricultural University
+Awadesh Pratap Singh University
+Ayush and Health Science University of Chattisgarh
+Bangalore University
+Barkatullah University
+Bharathidasan University
+Bhupendra Narayan Mandal University
+Biju Patnaik University of Technology
+BILASPUR VISHWAVIDYALAYA (Id: U-0636)
+Baba Farid University of Health and Medical Sciences
+Calcutta University
+Calicut University
+Chatrapati Sahuji Maharaj Kanpur University
+Ch. Devi Lal University
+Chhattisgarh Swami Vivekanand Technical University
+Devi Ahilya Vishwavidyalaya
+Dibrugarh University
+Dr. B. R. Ambedkar University
+Dr. Babasaheb Ambedkar Marathwada University
+Dr. Harisingh Gaur Vishwavidyalaya
+Dr. N.T.R. University of Health Sciences
+Gauhati University
+Gautam Buddh Technical University
+Goa University
+Gondwana University
+Gujarat Ayurveda University
+Gujarat Technological University
+Gulbarga University
+Guru Ghasidas Vishwavidyalaya
+Guru Gobind Singh Indraprastha University (Id: U-0099)
+Guru Nanak Dev University
+Hemachandracharya North Gujarat University
+Hemwati Nandan Bahuguna Garhwal University
+Himachal Pradesh Technical University
+Himachal Pradesh University
+Integral University
+Jagadguru Ramanandacharya Rajasthan Sanskrit University
+Jai Narain Vyas University
+Jai Prakash Vishwavidyalaya
+Jawaharlal Nehru Technological University
+Jiwaji University
+Junagadh Agricultural University (Id: U-0140)
+Kakatiya University
+Kalyani University
+Kannada University
+Kannur University
+Karnataka State Women University
+Karnataka University
+KERALA UNIVERSITY OF HEALTH AND ALLIED SCIENCES (Id: U-0630)
+King George Medical University (Id: U-0523)
+Kota University
+Krantiguru Shyamji Krishna Verma Kachchh University
+Kurukshetra University
+Kushabhau Thakre Patrakarita Avam Jansanchar Vishwavidyalaya
+Kuvempu University
+Madurai Kamaraj University
+Mahamaya Technical University (Id: U-0526)
+Maharaja Ganga Singh University
+Maharaja Krishnakumarsinhji Bhavnagar University (Id: U-0124)
+Maharashtra University of Health Sciences
+Mahatma Gandhi University
+Mahatma Jyotiba Phule Rohikhand University
+Magadh University
+Mangalore University
+Manipur University
+Maulana Azad National Urdu University
+Mohan Lal Sukhadia University
+Mumbai University Mumbai (Id: U-0318)
+Mysore University
+Navsari Agricultural University (Id: U-0145)
+Nilamber-Pitamber University
+Nirma University
+North Bengal University
+North Eastern Hill University
+North Maharashtra University
+Osmania University
+Panjab University
+Palamuru University
+Punjabi University
+Punjab Technical University
+Pt. Bhagat Dyal University of Health Science
+Pt. Ravishankar Shukla University
+Pune University
+Rajasthan Ayurveda University
+Rajasthan University
+Rajasthan University of Health Sciences
+Rajiv Gandhi Prodoyogiki Vishwavidyalaya
+Rajiv Gandhi University of Health Sciences
+Rani Channamma University
+Rani Durgavati Vishwavidyalaya
+Rayalaseema
+Rashtriya Sanskrit Sansthan
+Rashtrasant Tukadoji Maharaj Nagpur University
+Sampurnanand Sanskrit Vishwavidyalaya
+Sant Gadge Baba Amravati University
+Sardar Patel University
+Sarguja University
+Saurashtra University
+Shivaji University
+Shree Somnath Sanskrit University
+Sidho-Kanho Birsa University (Id: U-0583)
+Sri Venkateswara University
+Solapur University
+Sambalpur University
+Swami Ramanand Teerth Marathwada University
+Tamilnadu Agricultural University
+Tamil Nadu Dr. M.G.R. Medical University
+Tamil Nadu Teacher Education University
+Telangana University
+The West Bengal University of Health Sciences
+Tripura University
+University of Agricultural Sciences
+University of Delhi (Id: U-0120)
+University of Gour Banga
+University of Kashmir
+Uttarakhand Technical University
+Veer Bahadur Singh Purvanchal University
+Veer Kunwar Singh University
+Veer Narmad South Gujarat University
+Vesveswaraiah Technological University
+Vidya Sagar University
+Vikram Simhapuri University
+Vikram University
+West Bengal State University
+West Bengal University of Technology
+Yogi Vemana University
+
+# Fields
+Literature
+History
+Philosophy
+Languages
+Fine Arts
+Physics
+Chemistry
+Biology
+Mathematics
+Environmental Science
+Electrical Engineering
+Mechanical Engineering
+Computer Science and Engineering
+Civil Engineering
+Aerospace Engineering
+Accounting
+Finance
+Marketing
+Human Resource Management
+International Business
+Medicine (MBBS)
+Nursing
+Pharmacy
+Dentistry (BDS)
+Sociology
+Psychology
+Economics
+Political Science
+Bachelor of Laws (LLB)
+Intellectual Property Law
+Criminal Law
+Computer Science
+Information Technology
+Cybersecurity
+Elementary Education
+Secondary Education
+Special Education
+Agricultural Science
+Veterinary Science
+Environmental Science
+Conservation Biology
+Visual Arts
+Graphic Design
+Fashion Design
+Journalism
+Mass Communication
+Clinical Psychology
+Counseling Psychology
+Physical Education
+Sports Management
+Hotel Management
+Tourism Management
+
+# Degrees
+12th
+Bachelor of Arts (BA)
+Bachelor of Science (BSc)
+Bachelor of Commerce (BCom)
+Bachelor of Engineering (BE)
+Bachelor of Technology (B.Tech)
+Bachelor of Business Administration (BBA)
+Bachelor of Computer Applications (BCA)
+Bachelor of Architecture (B.Arch)
+Bachelor of Pharmacy (B.Pharm)
+Master of Arts (MA)
+Master of Science (MSc)
+Master of Commerce (MCom)
+Master of Engineering (ME)
+Master of Technology (M.Tech)
+Master of Business Administration (MBA)
+Master of Computer Applications (MCA)
+Master of Architecture (M.Arch)
+Master of Pharmacy (M.Pharm)
+Doctor of Philosophy (PhD)
+Bachelor of Medicine and Bachelor of Surgery (MBBS)
+Bachelor of Dental Surgery (BDS)
+Bachelor of Ayurvedic Medicine and Surgery (BAMS)
+Bachelor of Homoeopathic Medicine and Surgery (BHMS)
+Bachelor of Veterinary Science and Animal Husbandry (BVSc & AH)
+Bachelor of Physiotherapy (BPT)
+Bachelor of Occupational Therapy (BOT)
+Bachelor of Laws (LLB)
+Chartered Accountancy (CA)
+Company Secretary (CS)
+Cost and Management Accountancy (CMA)
+Diploma in Engineering
+Diploma in Pharmacy
+Diploma in Education (DEd)
+Certificate in Financial Accounting (CFA)
+Certificate in Information Technology (CIT)
