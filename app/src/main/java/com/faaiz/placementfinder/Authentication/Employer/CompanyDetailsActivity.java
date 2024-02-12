@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.faaiz.placementfinder.MainActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.databinding.ActivityCompanyDetailsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +31,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     ActivityCompanyDetailsBinding binding;
     FirebaseAuth auth;
     DatabaseReference reference;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class CompanyDetailsActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference("Employers");
+
+        user_id = getUserId();
 
         retrieveData();
 
@@ -54,15 +58,25 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private String getUserId(){
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(this);
+        String userId = mySharedPreferences.getUserId();
+        if (userId == null) {
+            userId = auth.getCurrentUser().getUid();
+        }
+        return userId;
+    }
+
     private void saveData(){
         // Create a map to hold the updated user data
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", binding.etName.getText().toString());
         updates.put("companyName", binding.etCompanyName.getText().toString());
         updates.put("companyAddress", binding.etAddress.getText().toString());
+        updates.put("hasEnteredCompanyDetails", true);
 
 // Update the user data in the database
-        reference.child(auth.getCurrentUser().getUid()).updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+        reference.child(user_id).updateChildren(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -75,9 +89,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     }
 
     private void retrieveData(){
-        String employerId = auth.getCurrentUser().getUid(); // Replace with the actual employer user ID
-
-        reference.child(employerId).addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

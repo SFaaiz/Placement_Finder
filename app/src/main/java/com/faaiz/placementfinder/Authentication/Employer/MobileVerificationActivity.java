@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.faaiz.placementfinder.MainActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.databinding.ActivityMobileVerificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,9 @@ public class MobileVerificationActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference reference;
     String mVerificationId;
+    String user_id;
+    FirebaseUser firebaseUser;
+    String mobile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,11 @@ public class MobileVerificationActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference("Employers");
+
+        user_id = getUserId();
+        firebaseUser = auth.getCurrentUser();
+
+
 
         binding.proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +66,7 @@ public class MobileVerificationActivity extends AppCompatActivity {
         binding.sendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mobile = binding.etMobile.getText().toString();
+                mobile = binding.etMobile.getText().toString();
                 if(mobile.length() == 10){
                     PhoneAuthOptions options =
                             PhoneAuthOptions.newBuilder(auth)
@@ -84,6 +93,15 @@ public class MobileVerificationActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private String getUserId(){
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(this);
+        String userId = mySharedPreferences.getUserId();
+        if (userId == null) {
+            userId = auth.getCurrentUser().getUid();
+        }
+        return userId;
     }
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -151,13 +169,16 @@ public class MobileVerificationActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             Toast.makeText(MobileVerificationActivity.this, "Phone Verified Successfully", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = task.getResult().getUser();
-                            String userId = auth.getCurrentUser().getUid();
+                            String mobileNo = user.getPhoneNumber().substring(3);
+
+                            auth.updateCurrentUser(firebaseUser);
 
                             Map<String, Object> updates = new HashMap<>();
                             updates.put("mobileVerified", true);
+                            updates.put("mobile", mobileNo);
 
                             // update phone verification status
-                            reference.child(userId).updateChildren(updates)
+                            reference.child(user_id).updateChildren(updates)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

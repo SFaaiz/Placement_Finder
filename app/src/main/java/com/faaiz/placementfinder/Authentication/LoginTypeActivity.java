@@ -34,5 +34,14 @@ public class LoginTypeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        binding.tvLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =new Intent(LoginTypeActivity.this, LoginActivity.class);
+                i.putExtra("goToLoginType", true);
+                startActivity(i);
+            }
+        });
     }
 }

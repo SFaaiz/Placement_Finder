@@ -51,6 +51,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
                             }
                         });
 
+        final boolean[] flag = {false};
         binding.proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +62,12 @@ public class VerifyEmailActivity extends AppCompatActivity {
                         if(isVerified){
                             checkUserStatusAndNavigate();
                         }else{
-                            Toast.makeText(VerifyEmailActivity.this, "Please Verify Your Email First", Toast.LENGTH_SHORT).show();
+                            if(!flag[0]){
+                                flag[0] =true;
+                                run();
+                            }else{
+                                Toast.makeText(VerifyEmailActivity.this, "Please Verify Your Email First", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }, 1000);

@@ -16,6 +16,7 @@ import com.faaiz.placementfinder.Authentication.Employer.CompanyDetailsActivity;
 import com.faaiz.placementfinder.Authentication.Employer.MobileVerificationActivity;
 import com.faaiz.placementfinder.Employer;
 import com.faaiz.placementfinder.MainActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.User;
 import com.faaiz.placementfinder.databinding.ActivityRegistrationBinding;
@@ -62,6 +63,7 @@ public class RegistrationActivity extends AppCompatActivity {
     DatabaseReference employerReference;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     boolean isEmployer;
+    boolean employer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(new Intent(RegistrationActivity.this, VerifyEmailActivity.class));
                 finish();  // Finish the current activity to prevent going back
             } else {
-                checkPersonalDetailsStatusAndNavigate(false);
+                isEmployer();
+                Log.d(TAG, "onCreate: isemployer = " + employer);
             }
         } else {
             // User is not authenticated, show the login screen
@@ -176,6 +179,52 @@ public class RegistrationActivity extends AppCompatActivity {
 
         return future;
     }
+    private void isEmployer(){
+        String userId = mAuth.getCurrentUser().getUid(); // Replace with the actual user ID
+
+        DatabaseReference regularUserRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        DatabaseReference employerRef = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
+
+        regularUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Data exists under "Users" path
+                    // This user is a regular user
+                    employer = false;
+                    Log.d(TAG, "onDataChange: checking employer status = " + employer);
+                    checkPersonalDetailsStatusAndNavigate(false);
+                } else {
+                    // Data doesn't exist under "Users" path
+                    // Check if data exists under "Employers" path
+                    employerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                // Data exists under "Employers" path
+                                // This user is an employer
+                                // Proceed with employer logic
+                                employer = true;
+                                Log.d(TAG, "onDataChange: checking employer status = " + employer);
+                                checkEmployerProgress();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Handle errors or cancellation
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors or cancellation
+            }
+        });
+
+    }
 
 
     boolean isMobileVerified = false;
@@ -195,7 +244,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         isMobileVerified = employer.isMobileVerified();
                         hasEnteredCompanyDetails = employer.isHasEnteredCompanyDetails();
                         Log.d(TAG, "onDataChange: isMobileVerified : " + isMobileVerified + ", hasEnteredCompanyDetails : " + hasEnteredCompanyDetails);
+                        navigateEmployer();
                     }
+                }else{
+                    saveEmployerData();
                 }
                 future.complete(isMobileVerified);
             }
@@ -265,10 +317,12 @@ public class RegistrationActivity extends AppCompatActivity {
                             // Sign in success
                             Log.d("Google Sign Up", "signUpWithCredential:success");
                             Toast.makeText(RegistrationActivity.this, "Sign Up Successful", Toast.LENGTH_SHORT).show();
+                            saveUserId();
                             // You can get the user information using: task.getResult().getUser()
                             if(isEmployer){
                                 checkEmployerProgress();
                                 navigateEmployer();
+                                finish();
                                 return;
                             }
 
@@ -281,6 +335,23 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void saveEmployerData(){
+        String name = mAuth.getCurrentUser().getDisplayName();
+        String email = mAuth.getCurrentUser().getEmail();
+        String userId = mAuth.getCurrentUser().getUid();
+        Employer employer = new Employer(name,email,"",false,false);
+        employerReference.child(userId).setValue(employer).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: Data has been saved into firebase");
+                }else{
+                    Log.d(TAG, "onComplete: Failure " + task.getException());
+                }
+            }
+        });
     }
 
     private void saveDataInFireBase(){
@@ -412,6 +483,11 @@ public class RegistrationActivity extends AppCompatActivity {
         return matcher.find();
     }
 
+    private void saveUserId(){
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(this);
+        mySharedPreferences.saveUserId(mAuth.getCurrentUser().getUid());
+    }
+
     private void createUserWithEmailAndPassword(String email, String mobile, String name, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -425,6 +501,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             String userId = mAuth.getCurrentUser().getUid();
                             Log.d(TAG, "onComplete: userid " + userId);
+
+                            saveUserId();
 
                             if(isEmployer){
                                 Employer employer = new Employer(name,email,mobile,false,false);

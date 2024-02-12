@@ -12,7 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.faaiz.placementfinder.Authentication.Employer.CompanyDetailsActivity;
+import com.faaiz.placementfinder.Authentication.Employer.MobileVerificationActivity;
+import com.faaiz.placementfinder.Employer;
 import com.faaiz.placementfinder.MainActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.User;
 import com.faaiz.placementfinder.databinding.ActivityLoginBinding;
@@ -24,6 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -32,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +46,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,6 +115,14 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = getIntent();
+                boolean goToLoginType = intent.getBooleanExtra("goToLoginType",false);
+                if(goToLoginType){
+                    Intent i = new Intent(LoginActivity.this, LoginTypeActivity.class);
+                    startActivity(i);
+                    finish();
+                    return;
+                }
                 Intent i = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(i);
                 finish();
@@ -165,7 +181,13 @@ public class LoginActivity extends AppCompatActivity {
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                boolean doesUserExist = doesUserExist(account.getEmail());
+                Log.d(TAG, "onActivityResult: doesUserExist = " + account.getEmail() + " = " + doesUserExist);
+                if(doesUserExist){
+                    firebaseAuthWithGoogle(account);
+                }else{
+                    Toast.makeText(this, "Please goto signup page and create your account", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 // Google Sign In failed
                 Log.e("Google Sign In", "Failed. " + result.getStatus().getStatusMessage());
@@ -184,27 +206,13 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("Google Sign In", "signInWithCredential:success");
                             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                            saveDataInFireBase();
+                            // saving user id to avoid conflict after phone auth
+                            saveUserId();
 
-                            // Call the method and handle the CompletableFuture
-                            CompletableFuture<Boolean> hasEnteredDetailsFuture = hasEnteredPersonalDetails();
+                            // check user type and navigate accordingly
+                            isEmployer();
 
-                            // Attach a listener to the CompletableFuture
-                            hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
-                                Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
 
-                                // Inside this block, you can now use the retrieved boolean value
-                                if (hasEnteredDetails) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    // You can navigate to another activity or perform further actions here
-                                    Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
-                                    i.putExtra("isGoogleRegistration", true);
-                                    startActivity(i);
-                                }
-                            });
-                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Google Sign In", "signInWithCredential:failure", task.getException());
@@ -213,6 +221,22 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private boolean doesUserExist(String email) {
+        Task<SignInMethodQueryResult> task = FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email);
+        try {
+            SignInMethodQueryResult result = Tasks.await(task);
+            List<String> signInMethods = result.getSignInMethods();
+            return signInMethods != null && !signInMethods.isEmpty();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return false; // Return false in case of an error
+        }
+    }
+
+
+
+
 
     private void saveDataInFireBase(){
         String userId = mAuth.getCurrentUser().getUid();
@@ -254,9 +278,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-
-
     private boolean isValidUser(String email, String password){
         if(!isValidEmail(email)){
             binding.etEmail.setError("Email address is invalid");
@@ -285,6 +306,11 @@ public class LoginActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
+    private void saveUserId(){
+        MySharedPreferences mySharedPreferences = new MySharedPreferences(this);
+        mySharedPreferences.saveUserId(mAuth.getCurrentUser().getUid());
+    }
+
     private void signInWithEmailAndPassword(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -292,6 +318,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
+                            saveUserId();
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if(!user.isEmailVerified()){
                                 user.sendEmailVerification();
@@ -303,24 +330,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Login successful!",
                                     Toast.LENGTH_SHORT).show();
 
-                            // Call the method and handle the CompletableFuture
-                            CompletableFuture<Boolean> hasEnteredDetailsFuture = hasEnteredPersonalDetails();
+                            isEmployer();
 
-                            // Attach a listener to the CompletableFuture
-                            hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
-                                Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
 
-                                // Inside this block, you can now use the retrieved boolean value
-                                if (hasEnteredDetails) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    // You can navigate to another activity or perform further actions here
-                                    Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
-                                    startActivity(i);
-                                }
-                            });
-                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("LoginActivity", "signInWithEmail:failure , " + task.getException().getMessage(), task.getException());
@@ -341,5 +353,119 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    boolean employer = false;
+    private void isEmployer(){
+        String userId = mAuth.getCurrentUser().getUid(); // Replace with the actual user ID
+
+        DatabaseReference regularUserRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        DatabaseReference employerRef = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
+
+        regularUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Data exists under "Users" path
+                    // This user is a regular user
+                    employer = false;
+                    Log.d(TAG, "onDataChange: checking employer status = " + employer);
+                    // Call the method and handle the CompletableFuture
+                    CompletableFuture<Boolean> hasEnteredDetailsFuture = hasEnteredPersonalDetails();
+
+                    // Attach a listener to the CompletableFuture
+                    hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
+                        Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
+
+                        // Inside this block, you can now use the retrieved boolean value
+                        if (hasEnteredDetails) {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                            // You can navigate to another activity or perform further actions here
+                            Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                            startActivity(i);
+                        }
+                    });
+                    finish();
+                } else {
+                    // Data doesn't exist under "Users" path
+                    // Check if data exists under "Employers" path
+                    employerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                // Data exists under "Employers" path
+                                // This user is an employer
+                                // Proceed with employer logic
+                                employer = true;
+                                Log.d(TAG, "onDataChange: checking employer status = " + employer);
+                                checkEmployerProgress();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Handle errors or cancellation
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors or cancellation
+            }
+        });
+
+    }
+
+    boolean isMobileVerified = false;
+    boolean hasEnteredCompanyDetails = false;
+    private CompletableFuture<Boolean> checkEmployerProgress() {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Employer employer = dataSnapshot.getValue(Employer.class);
+                    if (employer != null) {
+                        isMobileVerified = employer.isMobileVerified();
+                        hasEnteredCompanyDetails = employer.isHasEnteredCompanyDetails();
+                        Log.d(TAG, "onDataChange: isMobileVerified : " + isMobileVerified + ", hasEnteredCompanyDetails : " + hasEnteredCompanyDetails);
+                        navigateEmployer();
+                    }
+                }
+                future.complete(isMobileVerified);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                future.completeExceptionally(databaseError.toException());
+            }
+        });
+
+        return future;
+    }
+
+    private void navigateEmployer(){
+        if(!isMobileVerified){
+            Intent i = new Intent(LoginActivity.this, MobileVerificationActivity.class);
+            startActivity(i);
+        }
+        else if(!hasEnteredCompanyDetails){
+            Intent i = new Intent(LoginActivity.this, CompanyDetailsActivity.class);
+            startActivity(i);
+        }
+        else{
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+        }
+        finish();
     }
 }
