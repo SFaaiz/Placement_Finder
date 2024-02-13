@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Authentication.RegistrationActivity"
     android:orientation="vertical"
+    android:background="@color/white"
     >
 
     <LinearLayout
@@ -22,6 +23,8 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:title="Registration"
+            android:background="@color/my_color"
+            app:titleTextColor="@color/white"
             >
 
 
@@ -106,13 +109,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnRegister"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
             android:background="@drawable/btn_border"
+            android:backgroundTint="@color/my_color"
             app:cornerRadius="4dp"
             app:iconGravity="start"
             android:layout_marginTop="10dp"
@@ -140,7 +144,7 @@
             android:layout_height="wrap_content"
             android:text="Sign In"
             android:layout_gravity="center_horizontal"
-            android:background="@color/white"
+            android:background="@drawable/btn_border"
             />
 
     </LinearLayout>
