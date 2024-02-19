@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/white"
     android:gravity="center">
 
     <!-- Welcome TextView -->
@@ -13,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center"
@@ -22,7 +24,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please enter your 10-digit mobile number to get started"
+        android:text="Please enter your 10-digit mobile number to proceed"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"/>
@@ -38,15 +41,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+91"
+            android:textColor="@color/black"
             android:textSize="18sp"/>
 
         <EditText
+            android:drawableStart="@drawable/baseline_local_phone_24"
             android:id="@+id/etMobile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="phone"
-            android:hint="Enter your mobile number"
+            android:hint="  Enter your mobile number"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
             android:maxLength="10"
             android:padding="12dp"/>
     </LinearLayout>
@@ -64,6 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
             android:hint="Enter your OTP"
             android:maxLength="10"
             android:padding="12dp"/>
@@ -73,6 +82,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send OTP"
+            android:textColor="@color/white"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="14dp"
+            android:background="@color/royalBlue"
             android:layout_marginLeft="10dp"
             android:textSize="18sp"/>
 
@@ -82,9 +95,12 @@
     <!-- Proceed Button -->
     <Button
         android:id="@+id/proceedBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Proceed"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_border"
+        android:textSize="18sp"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
         android:padding="12dp"/>

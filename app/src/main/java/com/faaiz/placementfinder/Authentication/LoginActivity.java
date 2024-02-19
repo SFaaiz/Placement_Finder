@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.faaiz.placementfinder.Authentication.Employer.CompanyDetailsActivity;
@@ -29,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -181,13 +184,7 @@ public class LoginActivity extends AppCompatActivity {
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                boolean doesUserExist = doesUserExist(account.getEmail());
-                Log.d(TAG, "onActivityResult: doesUserExist = " + account.getEmail() + " = " + doesUserExist);
-                if(doesUserExist){
-                    firebaseAuthWithGoogle(account);
-                }else{
-                    Toast.makeText(this, "Please goto signup page and create your account", Toast.LENGTH_SHORT).show();
-                }
+                firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed
                 Log.e("Google Sign In", "Failed. " + result.getStatus().getStatusMessage());
@@ -222,61 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean doesUserExist(String email) {
-        Task<SignInMethodQueryResult> task = FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email);
-        try {
-            SignInMethodQueryResult result = Tasks.await(task);
-            List<String> signInMethods = result.getSignInMethods();
-            return signInMethods != null && !signInMethods.isEmpty();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return false; // Return false in case of an error
-        }
-    }
 
-
-
-
-
-    private void saveDataInFireBase(){
-        String userId = mAuth.getCurrentUser().getUid();
-//        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
-
-        reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Data exists for this user
-                    // Proceed with your logic here
-                    Log.d(TAG, "onDataChange: Existing user");
-                } else {
-                    // No data exists for this user
-                    // Handle the case accordingly
-                    Log.d(TAG, "onDataChange: New user");
-                    User newUser = new User("", "", "", "", "", "", "", false);
-
-                    // Save the new user to the database
-                    reference.child(userId).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Log.d(TAG, "onComplete: Data saved into database");
-                            }else{
-                                Log.d(TAG, "onComplete: Data couldn't be saved into database, " + task.getException());
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle errors or cancellation
-            }
-        });
-
-
-    }
 
     private boolean isValidUser(String email, String password){
         if(!isValidEmail(email)){
@@ -370,23 +313,7 @@ public class LoginActivity extends AppCompatActivity {
                     // This user is a regular user
                     employer = false;
                     Log.d(TAG, "onDataChange: checking employer status = " + employer);
-                    // Call the method and handle the CompletableFuture
-                    CompletableFuture<Boolean> hasEnteredDetailsFuture = hasEnteredPersonalDetails();
-
-                    // Attach a listener to the CompletableFuture
-                    hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
-                        Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
-
-                        // Inside this block, you can now use the retrieved boolean value
-                        if (hasEnteredDetails) {
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                            // You can navigate to another activity or perform further actions here
-                            Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
-                            startActivity(i);
-                        }
-                    });
+                    navigateUser();
                     finish();
                 } else {
                     // Data doesn't exist under "Users" path
@@ -401,6 +328,8 @@ public class LoginActivity extends AppCompatActivity {
                                 employer = true;
                                 Log.d(TAG, "onDataChange: checking employer status = " + employer);
                                 checkEmployerProgress();
+                            }else{
+                                showOptionsBottomSheet();
                             }
                         }
 
@@ -419,6 +348,98 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
+    private void navigateUser(){
+        // Call the method and handle the CompletableFuture
+        CompletableFuture<Boolean> hasEnteredDetailsFuture = hasEnteredPersonalDetails();
+
+        // Attach a listener to the CompletableFuture
+        hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
+            Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
+
+            // Inside this block, you can now use the retrieved boolean value
+            if (hasEnteredDetails) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                // You can navigate to another activity or perform further actions here
+                Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    // Method to show BottomSheetDialog with options
+    private void showOptionsBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_dialog, null);
+        bottomSheetDialog.setContentView(view);
+
+        // Find views and set click listeners for user and employer options
+        Button userOption = view.findViewById(R.id.btn_user);
+        Button employerOption = view.findViewById(R.id.btn_employer);
+        userOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle user option click
+                // Proceed as user
+                bottomSheetDialog.dismiss();
+                saveUserData(true);
+            }
+        });
+
+        employerOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle employer option click
+                // Proceed as employer
+                bottomSheetDialog.dismiss();
+                saveUserData(false);
+            }
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private void saveUserData(boolean isUser) {
+        DatabaseReference databaseReference;
+        String userId = mAuth.getCurrentUser().getUid();
+        if (isUser) {
+            // Save data under "Users" node
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+            User newUser = new User(mAuth.getCurrentUser().getDisplayName(), "", mAuth.getCurrentUser().getEmail(), "", "", "", "", false);
+            databaseReference.setValue(newUser);
+        } else {
+            // Save data under "Employers" node
+            databaseReference = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
+            Employer employer = new Employer(mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getEmail(),"",false,false);
+            databaseReference.setValue(employer);
+        }
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Data saved successfully
+                Log.d(TAG, "Data saved successfully for " + (isUser ? "user" : "employer"));
+                if(isUser){
+                    Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                    i.putExtra("isGoogleRegistration", true);
+                    startActivity(i);
+                }else{
+                    Intent i = new Intent(LoginActivity.this, MobileVerificationActivity.class);
+                    startActivity(i);
+                }
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Failed to save data
+                Log.e(TAG, "Failed to save data for " + (isUser ? "user" : "employer"), databaseError.toException());
+            }
+        });
+    }
+
 
     boolean isMobileVerified = false;
     boolean hasEnteredCompanyDetails = false;

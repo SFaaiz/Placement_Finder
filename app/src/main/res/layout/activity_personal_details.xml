@@ -7,6 +7,7 @@
     tools:context=".Authentication.PersonalDetailsActivity"
     android:orientation="vertical"
     android:padding="15dp"
+    android:background="@color/white"
     >
 
 
@@ -16,6 +17,7 @@
         android:layout_height="wrap_content"
         android:text="Your profile helps you discover people and opportunities"
         android:textSize="23sp"
+        android:textColor="@color/black"
         android:fontFamily="serif"
         android:textStyle="bold"
 
@@ -33,7 +35,8 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_text_layout"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
             android:padding="10dp"
             android:inputType="textPersonName"
             />
@@ -51,7 +54,7 @@
             android:id="@+id/etMobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_text_layout"
+            android:textColor="@color/black"
             android:padding="10dp"
             android:inputType="phone"
             />
@@ -63,6 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:hint="University or College*"
         android:completionThreshold="1" />
 
@@ -72,6 +77,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Degree or Course*"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:completionThreshold="1" />
 
     <AutoCompleteTextView
@@ -80,6 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Field"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:completionThreshold="1" />
 
     <AutoCompleteTextView
@@ -88,6 +97,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Location*"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         android:completionThreshold="1" />
 
     <com.google.android.material.button.MaterialButton
@@ -97,6 +108,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
         android:text="Proceed"
+        android:textColor="@color/white"
         android:layout_marginTop="15dp"
         />
 

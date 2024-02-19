@@ -8,12 +8,14 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="30dp"
+    android:background="@color/white"
     >
     <TextView
         android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please choose why you are using our app"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="26sp"
         android:fontFamily="serif"
@@ -133,6 +135,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Already have an account?  "
+            android:textColor="@color/black"
+            android:textSize="17sp"
             />
         <TextView
             android:id="@+id/tv_logIn"
@@ -140,6 +144,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Log In"
+            android:textStyle="bold"
+            android:textSize="17sp"
             />
     </LinearLayout>
 

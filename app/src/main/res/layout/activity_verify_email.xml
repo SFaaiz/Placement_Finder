@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="@color/white"
     tools:context=".Authentication.VerifyEmailActivity">
 
     <TextView
@@ -12,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="An Email Verification Link has been sent to your registered Email, Please Verify your email to proceed further"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -25,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
         android:text="If you have verified your email then click below button to proceed"
+        android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/proceedBtn"
         app:layout_constraintEnd_toEndOf="parent"
