@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Authentication.LoginActivity"
+    android:background="@color/white"
     android:orientation="vertical"
     >
 
@@ -12,23 +13,25 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        android:background="@color/my_color"
+        app:title="Login"
+        android:layout_marginBottom="15dp"
+        android:background="@color/royalBlue"
         app:titleTextColor="@color/white"
-        app:title="Login">
+        >
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Sign Up"
             android:layout_gravity="end"
             android:layout_marginRight="15dp"
-            app:cornerRadius="8dp"
-            android:textColor="@color/my_color"
             android:backgroundTint="@color/white"
-            android:text="Sign Up" />
+            app:cornerRadius="8dp"
+            android:textColor="@color/royalBlue"
+            />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -43,15 +46,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/sharp_person_24"
+            app:startIconTint="@color/royalBlue"
             android:hint="Email*">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_text_layout"
                 android:padding="10dp"
                 android:inputType="textEmailAddress"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -60,15 +67,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/outline_lock_24"
+            app:startIconTint="@color/royalBlue"
             android:hint="Password*">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_text_layout"
                 android:padding="10dp"
                 android:inputType="textPassword"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -76,12 +88,12 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
             android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:background="@drawable/btn_border"
+            app:cornerRadius="2dp"
+            android:textSize="18sp"
             android:textColor="@color/white"
-            app:cornerRadius="4dp"
             app:iconGravity="start"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
@@ -97,18 +109,18 @@
             android:layout_marginBottom="6dp"
             />
 
-<!--        <Button-->
-<!--            android:id="@+id/btnGoogleLogin"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:drawableLeft="@mipmap/google_icon"-->
-<!--            android:backgroundTint="@color/white"-->
-<!--            android:padding="16dp"-->
-<!--            android:text="Login With Google"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="19sp" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/btnGoogleLogin"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="80dp"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:drawableLeft="@mipmap/google_icon"-->
+        <!--            android:backgroundTint="@color/white"-->
+        <!--            android:padding="16dp"-->
+        <!--            android:text="Login With Google"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            android:textColor="@color/black"-->
+        <!--            android:textSize="19sp" />-->
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/googleSignInButton"

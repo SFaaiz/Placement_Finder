@@ -3,7 +3,6 @@
     <style name="Base.Theme.PlacementFinder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
          <item name="colorPrimary">@color/royalBlue</item>
-        <item name="colorPrimary">@color/my_color</item>
     </style>
 
     <style name="Theme.PlacementFinder" parent="Base.Theme.PlacementFinder" />
