@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.faaiz.placementfinder.Employer;
 import com.faaiz.placementfinder.MainActivity;
 import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
+import com.faaiz.placementfinder.User;
 import com.faaiz.placementfinder.databinding.ActivityMobileVerificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,11 +29,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MobileVerificationActivity extends AppCompatActivity {
@@ -55,8 +61,6 @@ public class MobileVerificationActivity extends AppCompatActivity {
         user_id = getUserId();
         firebaseUser = auth.getCurrentUser();
 
-
-
         binding.proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,8 +70,12 @@ public class MobileVerificationActivity extends AppCompatActivity {
         binding.sendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isCodeSent){
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                }
                 mobile = binding.etMobile.getText().toString();
                 if(mobile.length() == 10){
+
                     PhoneAuthOptions options =
                             PhoneAuthOptions.newBuilder(auth)
                                     .setPhoneNumber("+91" + mobile)       // Phone number to verify
@@ -95,6 +103,31 @@ public class MobileVerificationActivity extends AppCompatActivity {
 
     }
 
+    private CompletableFuture<String> getMobile() {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        reference.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String mob = "";
+                if (dataSnapshot.exists()) {
+                    Employer employer = dataSnapshot.getValue(Employer.class);
+                    if (employer != null) {
+                        mob = employer.getMobile();
+                    }
+                }
+                future.complete(mob);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return future;
+    }
+
+    boolean isCodeSent = false;
+
     private String getUserId(){
         MySharedPreferences mySharedPreferences = new MySharedPreferences(this);
         String userId = mySharedPreferences.getUserId();
@@ -115,6 +148,7 @@ public class MobileVerificationActivity extends AppCompatActivity {
             //     detect the incoming verification SMS and perform verification without
             //     user action.
             Log.d(TAG, "onVerificationCompleted:" + credential);
+            binding.progressBar.setVisibility(View.GONE);
 
             signInWithPhoneAuthCredential(credential);
         }
@@ -124,6 +158,7 @@ public class MobileVerificationActivity extends AppCompatActivity {
             // This callback is invoked in an invalid request for verification is made,
             // for instance if the the phone number format is not valid.
             Log.w(TAG, "onVerificationFailed", e);
+            binding.progressBar.setVisibility(View.GONE);
 
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                 // Invalid request
@@ -145,9 +180,11 @@ public class MobileVerificationActivity extends AppCompatActivity {
             // now need to ask the user to enter the code and then construct a credential
             // by combining the code with a verification ID.
             Log.d(TAG, "onCodeSent:" + verificationId);
+            binding.progressBar.setVisibility(View.GONE);
 
             // Save verification ID and resending token so we can use them later
             mVerificationId = verificationId;
+            isCodeSent = true;
 //            mResendToken = token;
 
 //            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
@@ -183,6 +220,8 @@ public class MobileVerificationActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        MySharedPreferences sp = new MySharedPreferences(MobileVerificationActivity.this);
+                                        sp.saveUserProgress("companyDetailsActivity");
                                         Log.d(TAG, "onComplete: Data has been updated");
                                     } else {
                                         Log.d(TAG, "onComplete: Failure " + task.getException());

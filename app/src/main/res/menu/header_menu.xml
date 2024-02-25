@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Company Research"
+        android:icon="@drawable/research"
+        android:id="@+id/companyResearch"
+        />
+
+    <item android:title="Resources"
+        android:icon="@drawable/resources"
+        android:id="@+id/resources"
+        />
+
+    <item android:title="About"
+        android:icon="@drawable/about"
+        android:id="@+id/about"/>
+
+    <item android:title="Settings"
+        android:icon="@drawable/outline_settings_24"
+        android:id="@+id/setting"/>
+
+    <item
+        android:title="Logout"
+        android:id="@+id/logout"
+        android:icon="@drawable/logout"
+        android:iconTint="@color/royalBlue"
+        />
+</menu>

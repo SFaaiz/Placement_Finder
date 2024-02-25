@@ -1,7 +1,11 @@
 package com.faaiz.placementfinder.Home;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.faaiz.placementfinder.R;
+import com.faaiz.placementfinder.databinding.FragmentHomeBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,11 +62,17 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    FragmentHomeBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+
+
 
 
         return view;

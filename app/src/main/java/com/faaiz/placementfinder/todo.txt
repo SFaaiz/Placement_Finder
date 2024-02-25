@@ -1,3 +1,4 @@
-clear sharedpreferences upon logout
+clear sharedpreferences upon logout for userid, usertype, userprogress
 
 if a user has created an account as employer then he cant create account as employee and vice versa
+

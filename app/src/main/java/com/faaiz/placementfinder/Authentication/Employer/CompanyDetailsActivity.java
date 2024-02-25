@@ -53,6 +53,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                     saveData();
                     Intent i = new Intent(CompanyDetailsActivity.this, MainActivity.class);
                     startActivity(i);
+                    finish();
                 }
             }
         });
@@ -80,6 +81,8 @@ public class CompanyDetailsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    MySharedPreferences sp = new MySharedPreferences(CompanyDetailsActivity.this);
+                    sp.saveUserProgress("mainActivity");
                     Log.d(TAG, "onComplete: User data updates in firebase");
                 }else{
                     Log.d(TAG, "onComplete: user data could not be updated, " + task.getException());

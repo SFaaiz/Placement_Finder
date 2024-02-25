@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Placement Finder</string>
+    <string name="app_name">PlaceMate</string>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
     <string name="default_web_client_id">95179258193-7u7dqlt1ap1k0838antbv2tt4ee6gfgh.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

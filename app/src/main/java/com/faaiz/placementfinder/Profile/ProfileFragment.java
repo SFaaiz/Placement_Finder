@@ -7,8 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.faaiz.placementfinder.R;
+import com.faaiz.placementfinder.databinding.FragmentHomeBinding;
+import com.faaiz.placementfinder.databinding.FragmentPostBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,12 +60,31 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
     }
 
+    FragmentPostBinding binding;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    TextView tvName;
+    TextView tvEmail;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentPostBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        tvName = view.findViewById(R.id.etDisplayName);
+        tvEmail = view.findViewById(R.id.etEmailId);
+        tvName.setText(user.getDisplayName());
+        tvEmail.setText(user.getEmail());
+
+
+
+
+        return view;
     }
 }

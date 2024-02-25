@@ -69,24 +69,10 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
+        setContentView(binding.getRoot());
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            // Check if the email is verified
-            if (!currentUser.isEmailVerified()) {
-                // Navigate to VerifyEmailActivity
-                startActivity(new Intent(RegistrationActivity.this, VerifyEmailActivity.class));
-                finish();  // Finish the current activity to prevent going back
-            } else {
-                isEmployer();
-                Log.d(TAG, "onCreate: isemployer = " + employer);
-            }
-        } else {
-            // User is not authenticated, show the login screen
-            setContentView(binding.getRoot()); // Set your login layout here
-            // Further code for handling login, authentication, etc.
-        }
-
 
         isEmployer = getIntent().getBooleanExtra("isEmployer", false);
 
@@ -95,6 +81,8 @@ public class RegistrationActivity extends AppCompatActivity {
         employerReference = db.getReference("Employers");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        MySharedPreferences sp = new MySharedPreferences(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -319,13 +307,18 @@ public class RegistrationActivity extends AppCompatActivity {
                             Toast.makeText(RegistrationActivity.this, "Sign Up Successful", Toast.LENGTH_SHORT).show();
                             saveUserId();
                             // You can get the user information using: task.getResult().getUser()
+                            MySharedPreferences sp = new MySharedPreferences(RegistrationActivity.this);
                             if(isEmployer){
                                 checkEmployerProgress();
                                 navigateEmployer();
+                                sp.saveUserType("employer");
+                                sp.saveUserProgress("mobileVerificationActivity");
                                 finish();
                                 return;
                             }
 
+                            sp.saveUserType("user");
+                            sp.saveUserProgress("personalDetailsActivity");
                             saveDataInFireBase();
                             checkPersonalDetailsStatusAndNavigate(true);
                         } else {
@@ -504,6 +497,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             saveUserId();
 
+                            MySharedPreferences sp = new MySharedPreferences(RegistrationActivity.this);
+                            sp.saveUserProgress("emailActivity");
+
                             if(isEmployer){
                                 Employer employer = new Employer(name,email,mobile,false,false);
                                 employerReference.child(userId).setValue(employer).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -511,6 +507,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
                                             Log.d(TAG, "onComplete: Data has been saved into firebase");
+                                            sp.saveUserType("employer");
                                         }else{
                                             Log.d(TAG, "onComplete: Failure " + task.getException());
                                         }
@@ -527,6 +524,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
                                                 Log.d(TAG, "onComplete: Data has been saved into firebase");
+                                                sp.saveUserType("user");
                                             }else{
                                                 Log.d(TAG, "onComplete: Failure " + task.getException());
                                             }

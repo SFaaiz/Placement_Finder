@@ -304,6 +304,7 @@ public class LoginActivity extends AppCompatActivity {
 
         DatabaseReference regularUserRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
         DatabaseReference employerRef = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
+        MySharedPreferences sp = new MySharedPreferences(LoginActivity.this);
 
         regularUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -311,6 +312,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     // Data exists under "Users" path
                     // This user is a regular user
+                    sp.saveUserType("user");
                     employer = false;
                     Log.d(TAG, "onDataChange: checking employer status = " + employer);
                     navigateUser();
@@ -325,6 +327,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // Data exists under "Employers" path
                                 // This user is an employer
                                 // Proceed with employer logic
+                                sp.saveUserType("employer");
                                 employer = true;
                                 Log.d(TAG, "onDataChange: checking employer status = " + employer);
                                 checkEmployerProgress();
@@ -357,11 +360,15 @@ public class LoginActivity extends AppCompatActivity {
         hasEnteredDetailsFuture.thenAccept(hasEnteredDetails -> {
             Log.d(TAG, "hasEnteredPersonalDetails: true or false --> " + hasEnteredDetails);
 
+        MySharedPreferences sp = new MySharedPreferences(LoginActivity.this);
+
             // Inside this block, you can now use the retrieved boolean value
             if (hasEnteredDetails) {
+                sp.saveUserProgress("mainActivity");
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             } else {
+                sp.saveUserProgress("personalDetailsActivity");
                 // You can navigate to another activity or perform further actions here
                 Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
                 startActivity(i);
@@ -475,15 +482,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateEmployer(){
+        MySharedPreferences sp = new MySharedPreferences(LoginActivity.this);
         if(!isMobileVerified){
+            sp.saveUserProgress("mobileVerificationActivity");
             Intent i = new Intent(LoginActivity.this, MobileVerificationActivity.class);
             startActivity(i);
         }
         else if(!hasEnteredCompanyDetails){
+            sp.saveUserProgress("companyDetailsActivity");
             Intent i = new Intent(LoginActivity.this, CompanyDetailsActivity.class);
             startActivity(i);
         }
         else{
+            sp.saveUserProgress("mainActivity");
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
         }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.faaiz.placementfinder.Authentication.Employer.MobileVerificationActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.databinding.ActivityVerifyEmailBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,6 +84,8 @@ public class VerifyEmailActivity extends AppCompatActivity {
         DatabaseReference regularUserRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
         DatabaseReference employerRef = FirebaseDatabase.getInstance().getReference("Employers").child(userId);
 
+        MySharedPreferences sp = new MySharedPreferences(this);
+
         regularUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,6 +93,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
                     // Data exists under "Users" path
                     // This user is a regular user
                     // Proceed with regular user logic
+                    sp.saveUserProgress("personalDetailsActivity");
                     Intent i =new Intent(VerifyEmailActivity.this, PersonalDetailsActivity.class);
                     startActivity(i);
                     finish();
@@ -103,6 +107,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
                                 // Data exists under "Employers" path
                                 // This user is an employer
                                 // Proceed with employer logic
+                                sp.saveUserProgress("mobileVerificationActivity");
                                 Intent i =new Intent(VerifyEmailActivity.this, MobileVerificationActivity.class);
                                 startActivity(i);
                                 finish();

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.faaiz.placementfinder.MainActivity;
+import com.faaiz.placementfinder.MySharedPreferences;
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.databinding.ActivityPersonalDetailsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -123,6 +124,8 @@ public class PersonalDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
+                                MySharedPreferences sp = new MySharedPreferences(PersonalDetailsActivity.this);
+                                sp.saveUserProgress("mainActivity");
                                 Log.d(TAG, "onComplete: User data updates in firebase");
                             }else{
                                 Log.d(TAG, "onComplete: user data could not be updated, " + task.getException());
