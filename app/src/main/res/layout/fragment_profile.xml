@@ -16,20 +16,36 @@
 
         <LinearLayout
             android:padding="10dp"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profilePhoto"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/formal_man"
-                app:shapeAppearanceOverlay="@style/round_img"
-                android:layout_marginBottom="5dp"
-                android:layout_centerHorizontal="true"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profilePhoto"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/profile"
+                    app:shapeAppearanceOverlay="@style/round_img"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"/>
+
+                <ImageView
+                    android:id="@+id/addImg"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:src="@drawable/baseline_camera_alt_24"
+                    android:layout_alignBottom="@id/profilePhoto"
+                    android:layout_alignEnd="@id/profilePhoto"/>
+
+            </RelativeLayout>
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,21 +56,21 @@
                 >
 
                 <TextView
-                    android:id="@+id/etDisplayName"
+                    android:id="@+id/tvDisplayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Faaiz Sorathiya"
+                    tools:text=""
                     android:textColor="@color/black"
-                    android:textSize="25sp"
+                    android:textSize="23sp"
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/etEmailId"
+                    android:id="@+id/tvEmailId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="faaizsorathiya@gmail.com"
+                    tools:text=""
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="5dp"/>
 
             </LinearLayout>

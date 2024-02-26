@@ -1,8 +1,16 @@
 package com.faaiz.placementfinder;
 
 public class User {
-    String name, mobile, email, university, degree, field, location;
+    String name, mobile, email, university, degree, field, location, profilePhotoUrl;
     boolean hasEnteredPersonalDetails, isEmployer;
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
+    }
 
     public boolean isHasEnteredPersonalDetails() {
         return hasEnteredPersonalDetails;
