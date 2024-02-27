@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Authentication.LoginTypeActivity"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="30dp"
     android:background="@color/white"
@@ -129,7 +129,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
-        android:layout_marginTop="100dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="60dp"
         >
         <TextView
             android:layout_width="wrap_content"
