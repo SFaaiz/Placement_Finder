@@ -3,6 +3,7 @@ package com.faaiz.placementfinder.Authentication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -51,6 +52,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             Toast.makeText(ForgotPasswordActivity.this,
                                     "Password reset email sent. Please check your email.",
                                     Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            finish();
                         } else {
                             // Failed to send password reset email
                             Toast.makeText(ForgotPasswordActivity.this,

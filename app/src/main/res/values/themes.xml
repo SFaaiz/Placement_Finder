@@ -5,12 +5,17 @@
          <item name="colorPrimary">@color/royalBlue</item>
         <item name="android:iconTint" tools:targetApi="o">@color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/royalBlueDark</item>
+        <item name="colorAccent">@color/royalBlueLight</item>
     </style>
 
     <style name="Theme.PlacementFinder" parent="Base.Theme.PlacementFinder" />
     <style name="Base.Theme.PlacementFinder.NoActionBar" parent="Theme.Material3.Light.NoActionBar" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
         <item name="colorPrimary">@color/royalBlue</item>
+        <item name="colorPrimaryDark">@color/royalBlueDark</item>
+        <item name="colorAccent">@color/royalBlueLight</item>
     </style>
 </resources>

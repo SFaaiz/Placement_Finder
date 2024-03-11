@@ -1,5 +1,7 @@
 package com.faaiz.placementfinder;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +34,7 @@ import android.widget.Toast;
 
 import com.faaiz.placementfinder.Application.ApplicationFragment;
 import com.faaiz.placementfinder.Authentication.LoginTypeActivity;
+import com.faaiz.placementfinder.Database.RoomDB;
 import com.faaiz.placementfinder.Home.HomeFragment;
 import com.faaiz.placementfinder.Jobs.JobsFragment;
 import com.faaiz.placementfinder.Post.PostFragment;
@@ -40,6 +44,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_NOTIFICATION = 99;
@@ -47,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     BottomNavigationView bnview;
     FirebaseAuth mAuth;
+    RoomDB roomDB;
+    FirebaseDatabase database;
+    MySharedPreferences sp;
+    private String userType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         bnview.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        sp = new MySharedPreferences(this);
+        userType = sp.getUserType();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, RC_NOTIFICATION);
@@ -68,12 +84,21 @@ public class MainActivity extends AppCompatActivity {
         // Set the custom font to a TextView
         tvTitle.setTypeface(customFont);
 
-        loadFrag(new HomeFragment());
+        boolean goToProfile = getIntent().getBooleanExtra("goToProfileFragment", false);
+        if(goToProfile){
+            loadFrag(new ProfileFragment());
+        }else{
+            loadFrag(new HomeFragment());
+        }
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,binding.drawerLayout, toolbar,
                 R.string.openDrawer, R.string.closeDrawer);
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        roomDB = RoomDB.getInstance(this);
+        insertData();
 
         bnview.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -107,6 +132,96 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void insertData(){
+        // Check if user exists in the database
+        if(userType.equals("user")){
+            User existingUser = roomDB.dao().getUser();
+            if (existingUser == null) {
+                // User does not exist, insert a new user
+                getUserData(mAuth.getCurrentUser().getUid(), new UserDataCallback() {
+                    @Override
+                    public void onUserDataReceived(User user) {
+                        roomDB.dao().insertUser(user);
+                        Log.d(TAG, "user model: " + user.toString());
+                    }
+                });
+
+                Log.d(TAG, "Inserted new user");
+            } else {
+                Log.d(TAG, "User already exists");
+                Log.d(TAG, "user model: " + existingUser.toString());
+            }
+        }else{
+            Employer existingEmployer = roomDB.dao().getEmployer();
+            if (existingEmployer == null) {
+                // User does not exist, insert a new user
+                getEmployerData(mAuth.getCurrentUser().getUid(), new EmployerDataCallback() {
+                    @Override
+                    public void onEmployerDataReceived(Employer employer) {
+                        roomDB.dao().insertEmployer(employer);
+                    }
+                });
+
+                Log.d(TAG, "Inserted new employer");
+            } else {
+                Log.d(TAG, "employer already exists");
+            }
+        }
+
+    }
+
+    public void getUserData(String userId, UserDataCallback callback) {
+        DatabaseReference userRef = database.getReference("Users").child(userId);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null) {
+                        callback.onUserDataReceived(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle potential errors
+            }
+        });
+    }
+
+    private void getEmployerData(String userId, EmployerDataCallback callback){
+        // If the user's data doesn't exist in the "users" node, check the "employers" node
+        DatabaseReference employerRef = database.getReference("Employers").child(userId);
+        employerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Employer employer = dataSnapshot.getValue(Employer.class);
+                    if (employer != null) {
+                        // Do something with the employer if needed
+                        callback.onEmployerDataReceived(employer);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle potential errors
+            }
+        });
+    }
+
+
+    public interface UserDataCallback {
+        void onUserDataReceived(User user);
+    }
+
+    public interface EmployerDataCallback {
+        void onEmployerDataReceived(Employer employer);
     }
 
     private void showLogoutConfirmationDialog() {

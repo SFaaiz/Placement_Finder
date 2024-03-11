@@ -5,4 +5,8 @@
     <string name="default_web_client_id">95179258193-7u7dqlt1ap1k0838antbv2tt4ee6gfgh.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_skills">Skills</string>
+    <string name="education">Education</string>
+    <string name="hint_project_name">Projects</string>
+    <string name="navigation_experience">Experience</string>
 </resources>

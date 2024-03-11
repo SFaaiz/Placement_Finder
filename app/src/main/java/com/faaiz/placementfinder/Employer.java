@@ -1,8 +1,40 @@
 package com.faaiz.placementfinder;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "employerTable")
 public class Employer {
-    String name, email, mobile, companyName, companyAddress;
-    boolean isEmployer, isMobileVerified, hasEnteredCompanyDetails;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    @ColumnInfo(name = "name")
+    private String name;
+
+    @ColumnInfo(name = "email")
+    private String email;
+
+    @ColumnInfo(name = "mobile")
+    private String mobile;
+
+    @ColumnInfo(name = "companyName")
+    private String companyName;
+
+    @ColumnInfo(name = "companyAddress")
+    private String companyAddress;
+
+    @ColumnInfo(name = "profilePhotoUrl")
+    private String profilePhotoUrl;
+
+    @ColumnInfo(name = "isEmployer")
+    private boolean isEmployer;
+
+    @ColumnInfo(name = "isMobileVerified")
+    private boolean isMobileVerified;
+
+    @ColumnInfo(name = "hasEnteredCompanyDetails")
+    private boolean hasEnteredCompanyDetails;
 
     public Employer(String name, String email, String mobile, String companyName, String companyAddress, boolean isMobileVerified, boolean hasEnteredCompanyDetails) {
         this.name = name;
@@ -26,6 +58,22 @@ public class Employer {
 
     public Employer(){
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public String getName() {

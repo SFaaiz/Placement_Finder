@@ -20,6 +20,24 @@
         android:theme="@style/Theme.PlacementFinder"
         tools:targetApi="31">
         <activity
+            android:name=".Profile.ResumeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile.ProfileProjectActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile.ProfileSkillsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile.ProfileExperienceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile.ProfileEducationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile.ProfilePersonalDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".Authentication.ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -30,13 +48,13 @@
             android:exported="false" />
         <activity
             android:name=".Authentication.Employer.MobileVerificationActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Authentication.LoginTypeActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Authentication.PersonalDetailsActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Authentication.VerifyEmailActivity"
             android:exported="false" />
