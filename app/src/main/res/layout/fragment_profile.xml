@@ -12,11 +12,11 @@
 
     <!-- Parent layout to hold both the LinearLayout and ExpandableLayout -->
     <LinearLayout
+        android:id="@+id/parentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- LinearLayout with id profile2 -->
         <LinearLayout
             android:id="@+id/profile2"
             android:padding="10dp"
@@ -94,6 +94,13 @@
             android:foregroundTint="@color/grey"
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/profileContent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,7 +133,7 @@
                     android:backgroundTint="@android:color/white"
                     android:textColor="@android:color/black"
                     app:icon="@drawable/ic_personal"
-app:iconTint="@android:color/transparent"
+                    app:iconTint="@android:color/transparent"
                     app:iconTintMode="add"
                     app:iconGravity="end"
                     android:text="Personal Details"
@@ -134,32 +141,32 @@ app:iconTint="@android:color/transparent"
 
             </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="10dp"
-            card_view:cardElevation="6dp"
-            card_view:cardUseCompatPadding="true">
-
-            <Button
-                android:id="@+id/btn_educational_detail"
-                style="?android:attr/borderlessButtonStyle"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="@android:color/white"
-                android:gravity="center_vertical"
-                android:text="Educational Details"
-                android:textColor="@android:color/black"
-                app:icon="@drawable/ic_education"
-                app:iconGravity="end"
-                app:iconTint="@android:color/transparent"
-                app:iconTintMode="add" />
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="10dp"
+                card_view:cardElevation="6dp"
+                card_view:cardUseCompatPadding="true">
 
-        </com.google.android.material.card.MaterialCardView>
+                <Button
+                    android:id="@+id/btn_educational_detail"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:text="Educational Details"
+                    android:textColor="@android:color/black"
+                    app:icon="@drawable/ic_education"
+                    app:iconGravity="end"
+                    app:iconTint="@android:color/transparent"
+                    app:iconTintMode="add" />
 
-        <com.google.android.material.card.MaterialCardView
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="6dp"
@@ -237,22 +244,153 @@ app:iconTint="@android:color/transparent"
 
 
 
-        <Button
-            android:id="@+id/viewResume"
+            <Button
+                android:id="@+id/viewResume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Resume"
+                android:background="@drawable/btn_border"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginVertical="10dp"
+                app:icon="@drawable/baseline_remove_red_eye_24"
+                app:iconGravity="textStart"/>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/employerContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Resume"
-            android:background="@drawable/btn_border"
-            android:textSize="18sp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginVertical="10dp"
-            app:icon="@drawable/baseline_remove_red_eye_24"
-            app:iconGravity="textStart"/>
+            android:orientation="vertical"
+            >
 
 
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="10dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:background="@android:color/white">
 
 
+
+                <LinearLayout
+                    android:id="@+id/form_edu_ll_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Company Details"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        android:layout_marginTop="10dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCompanyName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Name Of My Company" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPersonName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Contact Person / Recruiter Name" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:hint="Phone Number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:hint="Company Address" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etCompDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:hint="Company Description" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/saveEmpBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="10dp"
+                        android:text="Save"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:background="@drawable/btn_border"
+                        />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

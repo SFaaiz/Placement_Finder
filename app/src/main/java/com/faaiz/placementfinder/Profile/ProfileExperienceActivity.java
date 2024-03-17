@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileExperienceActivity extends AppCompatActivity {
@@ -60,6 +63,20 @@ public class ProfileExperienceActivity extends AppCompatActivity {
             }
         });
 
+        binding.etStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showStartDatePicker();
+            }
+        });
+
+        binding.etEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEndDatePicker();
+            }
+        });
+
     }
 
     private void saveData(){
@@ -84,9 +101,9 @@ public class ProfileExperienceActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     roomDB.dao().updateUserExperience(companyName, jobTitle, startDate, endDate, experienceDescription);
                     dismissProgressDialog();
-                    Intent i = new Intent(ProfileExperienceActivity.this, MainActivity.class);
-                    i.putExtra("goToProfileFragment", true);
-                    startActivity(i);
+//                    Intent i = new Intent(ProfileExperienceActivity.this, MainActivity.class);
+//                    i.putExtra("goToProfileFragment", true);
+//                    startActivity(i);
                     finish();
                     Log.d(TAG, "onComplete: User data updated in firebase");
                 }else{
@@ -98,6 +115,39 @@ public class ProfileExperienceActivity extends AppCompatActivity {
         });
 
     }
+
+    public void showStartDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (datePicker, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+                    // Handle the selected start date
+                    String startDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedMonth + 1, selectedDayOfMonth, selectedYear);
+                    binding.etStartDate.setText(startDate);
+                }, year, month, dayOfMonth);
+
+        datePickerDialog.show();
+    }
+
+    public void showEndDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (datePicker, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+                    // Handle the selected end date
+                    String endDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedMonth + 1, selectedDayOfMonth, selectedYear);
+                    binding.etEndDate.setText(endDate);
+                }, year, month, dayOfMonth);
+
+        datePickerDialog.show();
+    }
+
 
     private boolean isValid(){
         if(binding.etCompanyName.getText().toString().isEmpty()){

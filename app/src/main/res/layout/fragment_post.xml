@@ -1,19 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="10dp"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".Post.PostFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Parent layout to hold both the LinearLayout and ExpandableLayout -->
+    <LinearLayout
+        android:id="@+id/parentLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:text="Post" />
+        android:paddingHorizontal="8dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="center_horizontal"
+            android:text="Job Details"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvHire"
+                android:padding="16dp"
+                android:completionThreshold="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="I want to hire a" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvCity"
+                android:padding="16dp"
+                android:completionThreshold="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="In the city" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvSkills"
+                android:padding="16dp"
+                android:completionThreshold="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Skills Required" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="10dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:background="@android:color/white">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+<!--                <com.google.android.material.chip.Chip-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Data Structure And Algorithms"-->
+<!--                    android:layout_marginHorizontal="5dp"-->
+<!--                    />-->
+
+<!--                <com.google.android.material.chip.Chip-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Java"-->
+<!--                    android:layout_marginHorizontal="5dp"-->
+<!--                    />-->
+
+<!--                <com.google.android.material.chip.Chip-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Java"-->
+<!--                    android:layout_marginHorizontal="5dp"-->
+<!--                    />-->
+            </com.google.android.material.chip.ChipGroup>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!-- ChipGroup to display selected skills -->
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- First EditText for minimum salary -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:errorEnabled="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMinSalary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Min Salary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Second EditText for maximum salary -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:errorEnabled="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etMaxSalary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Max Salary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Dropdown for minimum experience -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteMinExperience"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Minimum Experience"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dropdown for minimum qualification -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteMinQualification"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Minimum Qualification"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- TextInputLayout for job description -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etJobDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Job Description"
+                android:lines="2"
+                android:maxLines="4" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:background="@drawable/btn_border"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+    </LinearLayout>
+
+</ScrollView>

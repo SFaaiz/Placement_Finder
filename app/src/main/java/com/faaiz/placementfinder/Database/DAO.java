@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.faaiz.placementfinder.Employer;
+import com.faaiz.placementfinder.JobPost;
 import com.faaiz.placementfinder.User;
 
 import java.util.List;
@@ -58,4 +59,15 @@ public interface DAO {
 
     @Update
     void updateEmployer(Employer employer);
+
+    @Query("UPDATE employerTable SET name = :name, mobile = :mobile, companyName = :companyName, companyAddress = :companyAddress, companyDescription = :companyDescription")
+    void updateEmpCompDetails(String name, String mobile, String companyName, String companyAddress, String companyDescription);
+
+    // Jobs
+
+    @Insert
+    void insertJob(JobPost jobPost);
+
+    @Query("SELECT * FROM jobs")
+    List<JobPost> getAllJobPosts();
 }

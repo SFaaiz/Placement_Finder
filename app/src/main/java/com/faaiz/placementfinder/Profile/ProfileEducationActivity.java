@@ -80,9 +80,9 @@ public class ProfileEducationActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     roomDB.dao().updateUserEducation(course,university,field,grade,year);
                     dismissProgressDialog();
-                    Intent i = new Intent(ProfileEducationActivity.this, MainActivity.class);
-                    i.putExtra("goToProfileFragment", true);
-                    startActivity(i);
+//                    Intent i = new Intent(ProfileEducationActivity.this, MainActivity.class);
+//                    i.putExtra("goToProfileFragment", true);
+//                    startActivity(i);
                     finish();
                     Log.d(TAG, "onComplete: User data updated in firebase");
                 }else{

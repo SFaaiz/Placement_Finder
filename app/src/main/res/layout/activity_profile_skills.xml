@@ -18,14 +18,31 @@
         android:textColor="@android:color/black"
         android:textSize="20sp" />
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter skill"
-        android:completionThreshold="1"
         android:layout_marginTop="10dp"
-        android:inputType="text"/>
+        app:boxStrokeColor="@color/black"
+        app:boxStrokeWidth="2dp"
+        app:boxCornerRadiusTopStart="4dp"
+        app:boxCornerRadiusTopEnd="4dp"
+        app:boxCornerRadiusBottomStart="4dp"
+        app:boxCornerRadiusBottomEnd="4dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter skill"
+            android:completionThreshold="1"
+            android:padding="8dp"
+            android:textStyle="normal"
+            android:textSize="18sp"
+            android:inputType="text"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:layout_width="wrap_content"

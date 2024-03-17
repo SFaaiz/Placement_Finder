@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+
 @Entity(tableName = "employerTable")
 public class Employer {
     @PrimaryKey(autoGenerate = true)
@@ -27,6 +29,12 @@ public class Employer {
     @ColumnInfo(name = "profilePhotoUrl")
     private String profilePhotoUrl;
 
+    @ColumnInfo(name = "companyDescription")
+    private String companyDescription;
+
+    @ColumnInfo(name = "jobsPosted")
+    private List<String> jobsPosted;
+
     @ColumnInfo(name = "isEmployer")
     private boolean isEmployer;
 
@@ -35,6 +43,8 @@ public class Employer {
 
     @ColumnInfo(name = "hasEnteredCompanyDetails")
     private boolean hasEnteredCompanyDetails;
+
+
 
     public Employer(String name, String email, String mobile, String companyName, String companyAddress, boolean isMobileVerified, boolean hasEnteredCompanyDetails) {
         this.name = name;
@@ -58,6 +68,22 @@ public class Employer {
 
     public Employer(){
 
+    }
+
+    public List<String> getJobsPosted() {
+        return jobsPosted;
+    }
+
+    public void setJobsPosted(List<String> jobsPosted) {
+        this.jobsPosted = jobsPosted;
+    }
+
+    public String getCompanyDescription() {
+        return companyDescription;
+    }
+
+    public void setCompanyDescription(String companyDescription) {
+        this.companyDescription = companyDescription;
     }
 
     public int getId() {

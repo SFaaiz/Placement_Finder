@@ -9,9 +9,10 @@ import androidx.room.TypeConverters;
 
 import com.faaiz.placementfinder.Converters;
 import com.faaiz.placementfinder.Employer;
+import com.faaiz.placementfinder.JobPost;
 import com.faaiz.placementfinder.User;
 
-@Database(entities = {User.class, Employer.class}, version = 3  , exportSchema = false)
+@Database(entities = {User.class, Employer.class, JobPost.class}, version = 5  , exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class RoomDB extends RoomDatabase {
     public static RoomDB database;

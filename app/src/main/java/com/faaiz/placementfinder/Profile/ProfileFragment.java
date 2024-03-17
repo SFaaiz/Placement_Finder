@@ -3,7 +3,9 @@ package com.faaiz.placementfinder.Profile;
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.faaiz.placementfinder.Database.RoomDB;
@@ -40,7 +43,9 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class ProfileFragment extends Fragment {
@@ -67,6 +72,7 @@ public class ProfileFragment extends Fragment {
     private ExpandableLayout expandableLayout;
     private TextView titleTextView;
     private EditText contentEditText;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,16 +91,6 @@ public class ProfileFragment extends Fragment {
         setUserData();
 
 
-
-//        titleTextView.setOnClickListener(v -> {
-//            if (expandableLayout.isExpanded()) {
-//                expandableLayout.collapse();
-//                titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, com.skydoves.expandablelayout.R.drawable.ic_arrow_down, 0);
-//            } else {
-//                expandableLayout.expand();
-//                titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, com.skydoves.expandablelayout.R.drawable.ic_arrow_down, 0);
-//            }
-//        });
         binding.btnPersonalDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,15 +136,82 @@ public class ProfileFragment extends Fragment {
         binding.viewResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(requireContext(), ResumeActivity.class);
-                startActivity(i);
+                if(checkProfileProgress()){
+                    Intent i = new Intent(requireContext(), ResumeActivity.class);
+                    startActivity(i);
+                }else{
+                    Toast.makeText(requireContext(), "Please Complete Your Profile", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        binding.saveEmpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isValidEmployer()){
+                    showProgressDialog();
+                    saveEmployerData();
+                }
             }
         });
         return view;
     }
 
+    private void saveEmployerData() {
+        String companyName = binding.etCompanyName.getText().toString();
+        String personName = binding.etPersonName.getText().toString();
+        String phone = binding.etPhone.getText().toString();
+        String address = binding.etAddress.getText().toString();
+        String companyDesc = binding.etCompDesc.getText().toString();
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("companyName", companyName);
+        updates.put("name", personName);
+        updates.put("mobile", phone);
+        updates.put("companyAddress", address);
+        updates.put("companyDescription", companyDesc);
+
+        DatabaseReference empRef = db.getReference("Employers").child(mAuth.getCurrentUser().getUid());
+        empRef.updateChildren(updates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Update the local Room database
+                roomDB.dao().updateEmpCompDetails(personName,phone,companyName,address,companyDesc);
+
+                dismissProgressDialog();
+                clearFocus();
+                Log.d(TAG, "onComplete: User data updated in Firebase");
+                Toast.makeText(requireContext(), "Data Saved Successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                dismissProgressDialog();
+                Toast.makeText(requireContext(), "Data could not be updated", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onComplete: User data could not be updated: " + task.getException());
+            }
+        });
+    }
+
+    private void clearFocus(){
+        binding.etCompanyName.clearFocus();
+        binding.etPersonName.clearFocus();
+        binding.etPhone.clearFocus();
+        binding.etAddress.clearFocus();
+        binding.etCompDesc.clearFocus();
+    }
+
+
+    private boolean checkProfileProgress(){
+        User user = roomDB.dao().getUser();
+        if(user.getGrade()==null || user.getGrade().isEmpty() || user.getCompanyName()==null || user.getCompanyName().isEmpty() || user.getSkills()==null || user.getSkills().size()==0 || user.getProjectTitle()==null || user.getProjectTitle().isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     private void setUserData(){
         if(userType.equals("user")){
+            binding.employerContent.setVisibility(View.GONE);
+            binding.profileContent.setVisibility(View.VISIBLE);
             User user = roomDB.dao().getUser();
             if (user != null) {
                 // User data received, update UI or perform other actions
@@ -159,15 +222,77 @@ public class ProfileFragment extends Fragment {
                 Log.d(TAG, "User data is null");
             }
         }else{
+            binding.profileContent.setVisibility(View.GONE);
+            binding.employerContent.setVisibility(View.VISIBLE);
             Employer employer = roomDB.dao().getEmployer();
             if (employer != null) {
                 // User data received, update UI or perform other actions
                 binding.tvDisplayName.setText(employer.getName());
                 setUserProfile(employer.getProfilePhotoUrl());
+                fetchEmployerData();
                 Log.d(TAG, "username = " + employer.getName());
             } else {
                 Log.d(TAG, "User data is null");
             }
+        }
+    }
+
+    private boolean isValidEmployer() {
+        if (binding.etCompanyName.getText().toString().isEmpty()) {
+            binding.etCompanyName.setError("Company Name Cannot Be Empty");
+            return false;
+        }
+        if (binding.etPersonName.getText().toString().isEmpty()) {
+            binding.etPersonName.setError("Person Name Cannot Be Empty");
+            return false;
+        }
+        if (binding.etPhone.getText().toString().isEmpty()) {
+            binding.etPhone.setError("Phone Cannot Be Empty");
+            return false;
+        }
+        if (binding.etAddress.getText().toString().isEmpty()) {
+            binding.etAddress.setError("Address Cannot Be Empty");
+            return false;
+        }
+        if (binding.etCompDesc.getText().toString().isEmpty()) {
+            binding.etCompDesc.setError("Company Description Cannot Be Empty");
+            return false;
+        }
+        return true;
+    }
+
+
+    private void fetchEmployerData(){
+        Employer employer = roomDB.dao().getEmployer();
+        if(employer != null){
+            binding.etCompanyName.setText(employer.getCompanyName());
+            binding.etPersonName.setText(employer.getName());
+            binding.etPhone.setText(employer.getMobile());
+            binding.etAddress.setText(employer.getCompanyAddress());
+            if(employer.getCompanyDescription() != null && !employer.getCompanyDescription().isEmpty()){
+                binding.etCompDesc.setText(employer.getCompanyDescription());
+            }
+
+        }else{
+            Log.d(TAG, "fetchData: Employer is null");
+        }
+
+    }
+
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(requireContext()); // Replace 'this' with your activity or fragment context
+            progressDialog.setTitle("Saving data...");
+            progressDialog.setMessage("Please wait while we save your data"); // Set the message to be displayed
+            progressDialog.setCancelable(false); // Make the dialog not cancelable
+            progressDialog.setCanceledOnTouchOutside(false); // Make the dialog not dismiss when touched outside
+        }
+        progressDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 

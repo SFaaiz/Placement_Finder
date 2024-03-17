@@ -79,9 +79,9 @@ public class ProfilePersonalDetailsActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     roomDB.dao().updateUserPersonal(name,contact,location);
                     dismissProgressDialog();
-                    Intent i = new Intent(ProfilePersonalDetailsActivity.this, MainActivity.class);
-                    i.putExtra("goToProfileFragment", true);
-                    startActivity(i);
+//                    Intent i = new Intent(ProfilePersonalDetailsActivity.this, MainActivity.class);
+//                    i.putExtra("goToProfileFragment", true);
+//                    startActivity(i);
                     finish();
                     Log.d(TAG, "onComplete: User data updated in firebase");
                 }else{

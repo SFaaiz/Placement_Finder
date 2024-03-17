@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,17 +17,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +36,11 @@ import com.faaiz.placementfinder.Jobs.JobsFragment;
 import com.faaiz.placementfinder.Post.PostFragment;
 import com.faaiz.placementfinder.Profile.ProfileFragment;
 import com.faaiz.placementfinder.databinding.ActivityMainBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -49,6 +50,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_NOTIFICATION = 99;
@@ -84,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
         // Set the custom font to a TextView
         tvTitle.setTypeface(customFont);
 
+        if(userType.equals("user")){
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bnview);
+            Menu menu = bottomNavigationView.getMenu();
+            MenuItem item = menu.findItem(R.id.post); // Replace "your_item_id" with the ID of the item you want to hide
+            item.setVisible(false);
+        }
+
         boolean goToProfile = getIntent().getBooleanExtra("goToProfileFragment", false);
         if(goToProfile){
             loadFrag(new ProfileFragment());
@@ -104,16 +115,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.home){
-                    loadFrag(new HomeFragment());
-                }else if(id == R.id.jobs){
-                    loadFrag(new JobsFragment());
-                }else if(id == R.id.post){
-                    loadFrag(new PostFragment());
-                }else if(id == R.id.application){
-                    loadFrag(new ApplicationFragment());
+
+                if(userType.equals("user")){
+                    if(id == R.id.home){
+                        loadFrag(new HomeFragment());
+                    }else if(id == R.id.jobs){
+                        loadFrag(new JobsFragment());
+                    }
+                    else if(id == R.id.post){
+                        loadFrag(new PostFragment());
+                    }
+                    else if(id == R.id.application){
+                        loadFrag(new ApplicationFragment());
+                    }else{
+                        loadFrag(new ProfileFragment());
+                    }
                 }else{
-                    loadFrag(new ProfileFragment());
+                    if(id == R.id.home){
+                        loadFrag(new HomeFragment());
+                    }else if(id == R.id.jobs){
+                        loadFrag(new JobsFragment());
+                    }
+                    else if(id == R.id.post){
+                        loadFrag(new PostFragment());
+                    }
+                    else if(id == R.id.application){
+                        loadFrag(new ApplicationFragment());
+                    }else{
+                        loadFrag(new ProfileFragment());
+                    }
                 }
                 return true;
             }
@@ -239,12 +269,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
-        mAuth.signOut();
-        Toast.makeText(MainActivity.this, "User logged out successfully", Toast.LENGTH_SHORT).show();
-        clearSharedPreferences();
-        Intent i = new Intent(MainActivity.this, LoginTypeActivity.class);
-        startActivity(i);
-        finish();
+        clearRoomDB();
+        googleSignOut();
+    }
+
+    private void clearRoomDB(){
+// Run the delete operation on a background thread
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Perform the delete operation
+                roomDB.clearAllTables();
+            }
+        });
+
+    }
+
+    private void googleSignOut(){
+        // Initialize GoogleSignInOptions
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+// Build a GoogleSignInClient with the options specified by gso
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+// Call signOut() method to sign out the user
+        googleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Sign out successful
+                            // Clear cached account information
+                            FirebaseAuth.getInstance().signOut();
+                            Toast.makeText(MainActivity.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
+                            clearSharedPreferences();
+                            Intent i = new Intent(MainActivity.this, LoginTypeActivity.class);
+                            startActivity(i);
+                            finish();
+                            // Proceed with your desired actions after sign out
+                            // For example, navigate to the sign-in screen or display a message
+                        } else {
+                            // Sign out failed
+                            // Handle the failure scenario, if needed
+                            Log.w(TAG, "signOut:failure", task.getException());
+                            // Optionally, display an error message to the user
+                            Toast.makeText(MainActivity.this, "Sign out failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
 
     private void clearSharedPreferences(){
@@ -269,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     int n=0;
-    private void loadFrag(Fragment f){
+    public void loadFrag(Fragment f){
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         if(n==0){
@@ -279,6 +355,10 @@ public class MainActivity extends AppCompatActivity {
             ft.replace(R.id.frame, f);
         }
         ft.commit();
+    }
+
+    public void updateSelectedItem(int itemId) {
+        bnview.setSelectedItemId(itemId);
     }
 
 

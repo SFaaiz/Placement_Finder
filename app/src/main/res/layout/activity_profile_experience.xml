@@ -90,7 +90,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etStartDate"
                         android:layout_width="match_parent"
-                        android:inputType="date"
+                        android:inputType="text"
+                        android:focusable="false"
                         android:layout_height="wrap_content"
                         android:hint="Start Date" />
 
@@ -108,7 +109,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEndDate"
                         android:layout_width="match_parent"
-                        android:inputType="date"
+                        android:inputType="text"
+                        android:focusable="false"
                         android:layout_height="wrap_content"
                         android:hint="End Date" />
 
