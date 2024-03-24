@@ -297,6 +297,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUserProfile(String profilePhotoUrl){
+        Log.d(TAG, "setUserProfile: " + profilePhotoUrl);
         if (profilePhotoUrl != null && !profilePhotoUrl.isEmpty()) {
             Picasso.get()
                     .load(profilePhotoUrl)
@@ -394,7 +395,12 @@ public class ProfileFragment extends Fragment {
             userRef.child("profilePhotoUrl").setValue(imageUrl)
                     .addOnSuccessListener(aVoid -> {
                         // Image URL saved successfully
-                        roomDB.dao().updateProfile(imageUrl);
+                        if(userType.equals("user")){
+                            roomDB.dao().updateProfile(imageUrl);
+                        }else{
+                            roomDB.dao().updateEmployerProfile(imageUrl);
+                        }
+
                         Log.d(TAG, "Image URL saved to Firebase Database: " + imageUrl);
                     })
                     .addOnFailureListener(e -> {

@@ -2,33 +2,29 @@ package com.faaiz.placementfinder.Post;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Toast;
 
 import com.faaiz.placementfinder.Database.RoomDB;
 import com.faaiz.placementfinder.JobPost;
 import com.faaiz.placementfinder.Jobs.JobsFragment;
 import com.faaiz.placementfinder.MainActivity;
-import com.faaiz.placementfinder.MySharedPreferences;
+import com.faaiz.placementfinder.Profile.ProfileSkillsActivity;
 import com.faaiz.placementfinder.R;
-import com.faaiz.placementfinder.databinding.FragmentPostBinding;
-import com.faaiz.placementfinder.databinding.FragmentProfileBinding;
+import com.faaiz.placementfinder.databinding.ActivityPostBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,72 +41,33 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PostFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class PostFragment extends Fragment {
+public class PostActivity extends AppCompatActivity {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PostFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PostFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PostFragment newInstance(String param1, String param2) {
-        PostFragment fragment = new PostFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @NonNull
-    FragmentPostBinding binding;
     FirebaseAuth mAuth;
     FirebaseUser user;
     FirebaseDatabase db;
     ProgressDialog progressDialog;
     RoomDB roomDB;
-
+    ActivityPostBinding binding;
+    String jobId;
+    boolean updateJob;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityPostBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
-        roomDB = RoomDB.getInstance(requireContext());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentPostBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        roomDB = RoomDB.getInstance(this);
 
         setChipGroupVisibility();
         setSkillsAdapter();
@@ -118,6 +75,16 @@ public class PostFragment extends Fragment {
         setCityAdapter();
         setMinQualificationAdapter();
         setMinExpAdapter();
+
+        String message = getIntent().getStringExtra("message");
+
+        updateJob = false;
+        if(message != null && message.equals("editPost")){
+            int position = getIntent().getIntExtra("position", -1);
+            binding.saveBtn.setText("Update");
+            updateJob = true;
+            fetchPost(position);
+        }
 
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,8 +96,88 @@ public class PostFragment extends Fragment {
             }
         });
 
-        return view;
+
+
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(PostActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    /*
+    1,2,3,4,5,6,7
+
+     */
+
+    JobPost existingJobPost;
+    private void fetchPost(int position){
+        List<JobPost> allJobPosts = roomDB.dao().getAllJobPosts();
+        existingJobPost = allJobPosts.get(position);
+
+        int totalJobs = allJobPosts.size();
+        Log.d(TAG, "fetchPost: totaljobs = " + totalJobs + " , position = " + position);
+        // Calculate the actual position based on the reversed order
+        int actualPosition = (totalJobs - position) - 1;
+        List<String> jobIds = roomDB.dao().getEmployer().getJobsPosted();
+        Log.d(TAG, "fetchPost: actual position = " + actualPosition + " , jobids = " + jobIds.size());
+        jobId = jobIds.get(actualPosition);
+
+        binding.actvHire.setText(existingJobPost.getRoleToHire());
+        binding.actvCity.setText(existingJobPost.getCity());
+
+        if(existingJobPost.getSkillsRequired() != null && !existingJobPost.getSkillsRequired().isEmpty()){
+            binding.chipGroup.setVisibility(View.VISIBLE);
+            for(String item: existingJobPost.getSkillsRequired()){
+                Chip chip = new Chip(this);
+                chip.setText(item);
+                chip.setCloseIconVisible(true);
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        binding.chipGroup.removeView(chip);
+                        setChipGroupVisibility();
+                    }
+                });
+                binding.chipGroup.addView(chip);
+            }
+        }
+
+        binding.etMinSalary.setText(existingJobPost.getMinSalary());
+        binding.etMaxSalary.setText(existingJobPost.getMaxSalary());
+        binding.autoCompleteMinExperience.setText(existingJobPost.getMinExperience());
+        binding.autoCompleteMinQualification.setText(existingJobPost.getMinQualification());
+        binding.etJobDescription.setText(existingJobPost.getJobDescription());
+    }
+
+    private void updateJobPost(){
+// Create a reference to the specific job ID under the "Jobs" node
+        DatabaseReference jobRef = FirebaseDatabase.getInstance().getReference().child("Jobs").child(jobId);
+
+// Create a new JobPost object with updated values
+        JobPost updatedJobPost = new JobPost(/* pass updated field values here */);
+
+// Set the value of the specific job ID to the updated JobPost object
+        jobRef.setValue(updatedJobPost)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Handle success
+                        Log.d(TAG, "JobPost overwritten successfully!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure
+                        Log.e(TAG, "Error overwriting JobPost: " + e.getMessage());
+                    }
+                });
+
+    }
+
 
     private void postJobOnFB(){
         // Assuming you have the binding object named 'binding'
@@ -153,22 +200,57 @@ public class PostFragment extends Fragment {
         String minQualification = binding.autoCompleteMinQualification.getText().toString();
         String jobDescription = binding.etJobDescription.getText().toString();
 
-        JobPost job = new JobPost(roleToHire, city, skillsRequired, minSalary, maxSalary, minExperience, minQualification, jobDescription);
+        String companyName = roomDB.dao().getEmployer().getCompanyName();
 
+        JobPost job = new JobPost(roleToHire, city, skillsRequired, minSalary, maxSalary, minExperience, minQualification, jobDescription, companyName, mAuth.getCurrentUser().getUid());
+
+
+        String jobIdTemp;
+
+        // check if we have to update
+        if(updateJob){
+            jobIdTemp = jobId;
+            job.setId(existingJobPost.getId());
+        }else{
+            jobIdTemp = UUID.randomUUID().toString();
+        }
+
+        saveJob(job,jobIdTemp);
+
+
+//        String jobId = UUID.randomUUID().toString();
+
+    }
+
+    private void saveJob(JobPost job, String jobId){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Jobs");
-        String jobId = UUID.randomUUID().toString();
+
         reference.child(jobId).setValue(job).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    addPostId(jobId, job);
+                    if(updateJob){
+                        roomDB.dao().updateJobPost(job);
+                        dismissProgressDialog();
+                        goToJobsFragment();
+                    }else{
+                        addPostId(jobId, job);
+                    }
+
 
                 }else{
                     Log.d(TAG, "onComplete: Failure " + task.getException());
-                    Toast.makeText(requireContext(), "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostActivity.this, "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void goToJobsFragment(){
+        Intent i = new Intent(PostActivity.this, MainActivity.class);
+        i.putExtra("gotoJobs", true);
+        startActivity(i);
+        finish();
     }
 
     private void addPostId(String jobId, JobPost jobPost){
@@ -196,13 +278,20 @@ public class PostFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             roomDB.dao().insertJob(jobPost);
+                            List<String> jobsPosted = roomDB.dao().getEmployer().getJobsPosted();
+                            if(jobsPosted == null){
+                                jobsPosted = new ArrayList<>();
+                            }
+                            jobsPosted.add(jobId);
+                            roomDB.dao().updateJobId(jobsPosted);
                             dismissProgressDialog();
-                            Toast.makeText(requireContext(), "Job Posted Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostActivity.this, "Job Posted Successfully", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onComplete: Data has been saved into firebase and room db");
-                            ((MainActivity) requireActivity()).loadFrag(new JobsFragment());
-                            ((MainActivity) requireActivity()).updateSelectedItem(R.id.jobs);
+
+                            goToJobsFragment();
+//                            finish();
                         }else{
-                            Toast.makeText(requireContext(), "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostActivity.this, "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -211,12 +300,14 @@ public class PostFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d(TAG, "onCancelled: " + error.getMessage());
-                Toast.makeText(requireContext(), "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PostActivity.this, "Couldn't Post the Job", Toast.LENGTH_SHORT).show();
             }
 
 
         });
     }
+
+
 
 //    int n=0;
 //    private void loadFrag(Fragment f){
@@ -240,11 +331,52 @@ public class PostFragment extends Fragment {
 
     public void setMinExpAdapter(){
         List<String> minExpList = new ArrayList<>(Arrays.asList("Fresher", "6 months", "1 year", "2 years", "3 years", "5 years", "7 years", "10 years"));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, minExpList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, minExpList) {
+            @NonNull
+            @Override
+            public Filter getFilter() {
+                return new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults filterResults = new FilterResults();
+                        filterResults.values = minExpList;
+                        filterResults.count = minExpList.size();
+                        return filterResults;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
         binding.autoCompleteMinExperience.setAdapter(adapter);
+
         binding.autoCompleteMinExperience.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.autoCompleteMinExperience.showDropDown();
+            }
+        });
+
+        binding.autoCompleteMinExperience.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    binding.autoCompleteMinExperience.showDropDown();
+                }
+            }
+        });
+
+
+        binding.autoCompleteMinExperience.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!binding.autoCompleteMinExperience.getText().toString().isEmpty()){
+                    binding.autoCompleteMinExperience.setText("");
+                }
+
                 binding.autoCompleteMinExperience.showDropDown();
             }
         });
@@ -260,14 +392,44 @@ public class PostFragment extends Fragment {
 
     public void setMinQualificationAdapter(){
         List<String> minQualificationList = new ArrayList<>(Arrays.asList("<10th pass", "10th pass or above", "12th pass or above", "Graduate or above", "Post Graduate"));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, minQualificationList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, minQualificationList) {
+            @NonNull
+            @Override
+            public Filter getFilter() {
+                return new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults filterResults = new FilterResults();
+                        filterResults.values = minQualificationList;
+                        filterResults.count = minQualificationList.size();
+                        return filterResults;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
         binding.autoCompleteMinQualification.setAdapter(adapter);
+
         binding.autoCompleteMinQualification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 binding.autoCompleteMinQualification.showDropDown();
             }
         });
+
+        binding.autoCompleteMinQualification.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    binding.autoCompleteMinQualification.showDropDown();
+                }
+            }
+        });
+
 
         binding.autoCompleteMinQualification.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -308,12 +470,18 @@ public class PostFragment extends Fragment {
             // Show error message for job description
             return false;
         }
+
+        String companyDescription = roomDB.dao().getEmployer().getCompanyDescription();
+        if(companyDescription == null || companyDescription.isEmpty()){
+            Toast.makeText(this, "Please complete your profile first", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
     public void setCityAdapter(){
         List<String> cityList = getCityNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, cityList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cityList);
         binding.actvCity.setAdapter(adapter);
     }
 
@@ -362,14 +530,14 @@ public class PostFragment extends Fragment {
     private void setJObRoleAdapter(){
         List<String> jobRolesArray = getJobRoleList();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, jobRolesArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, jobRolesArray);
         binding.actvHire.setAdapter(adapter);
     }
 
     private void setSkillsAdapter(){
         List<String> skillsArray = getSkillsList();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, skillsArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, skillsArray);
         binding.actvSkills.setAdapter(adapter);
 
         binding.actvSkills.setOnItemClickListener((parent, view, position, id) -> {
@@ -391,7 +559,7 @@ public class PostFragment extends Fragment {
 
             if (skillExists) {
                 // Skill already exists, show toast message
-                Toast.makeText(requireContext(), "Skill already added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Skill already added", Toast.LENGTH_SHORT).show();
             } else {
                 addChip(selectedSkill);
             }
@@ -454,7 +622,7 @@ public class PostFragment extends Fragment {
     }
 
     private void addChip(String skill) {
-        Chip chip = new Chip(requireContext());
+        Chip chip = new Chip(this);
         chip.setText(skill);
         chip.setCloseIconVisible(true);
         chip.setOnCloseIconClickListener(new View.OnClickListener() {
@@ -491,7 +659,7 @@ public class PostFragment extends Fragment {
 
     private boolean isValidSkills() {
         if (binding.chipGroup.getChildCount() == 0) {
-            Toast.makeText(requireContext(), "Please select at least One Skill", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select at least One Skill", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -541,7 +709,7 @@ public class PostFragment extends Fragment {
 
     private void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(requireContext()); // Replace 'this' with your activity or fragment context
+            progressDialog = new ProgressDialog(this); // Replace 'this' with your activity or fragment context
             progressDialog.setTitle("Posting Job...");
             progressDialog.setMessage("Please wait while we post your job"); // Set the message to be displayed
             progressDialog.setCancelable(false); // Make the dialog not cancelable

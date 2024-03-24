@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    tools:context=".Jobs.ViewJobActivity">
+
+    <!-- ScrollView to make the content scrollable -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomBar">
+
+        <!-- Your existing content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Job Role and Salary -->
+            <TextView
+                android:id="@+id/textJobRole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/royalBlue"
+                android:text="Software Developer" />
+
+            <TextView
+                android:id="@+id/textSalary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/royalBlue"
+                android:textSize="18sp"
+                android:text="30,000 - 50,000" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                />
+
+            <!-- Location and Experience -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Location -->
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Icon and Text -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_location"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/location_pin"
+                            android:layout_gravity="center_vertical"
+                            app:tint="@color/grey" />
+
+                        <TextView
+                            android:id="@+id/text_job_location"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="Job Location"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Actual Location -->
+                    <TextView
+                        android:id="@+id/tvLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_height="wrap_content"
+                        android:text="Location" />
+
+                </LinearLayout>
+
+                <!-- Experience -->
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Icon and Text -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_experience"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_work_experience"
+                            android:layout_gravity="center_vertical"
+                            app:tint="@color/grey" />
+
+                        <TextView
+                            android:id="@+id/text_job_experience"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="Job Experience"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Actual Experience -->
+                    <TextView
+                        android:id="@+id/tvExperience"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_height="wrap_content"
+                        android:text="Experience" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Qualification, Skills Required, Job Description -->
+            <!-- Add your existing TextViews here -->
+
+            <!-- Company Name, Contact Person, Company Address, Company Description -->
+            <!-- Add your existing TextViews here -->
+
+            <!-- Qualification -->
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Icon and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ic_qual"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_qualification"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/tvQual"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="Qualification"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <!-- Actual Location -->
+                <TextView
+                    android:id="@+id/tvQualification"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_height="wrap_content"
+                    android:text="Graduation" />
+
+            </LinearLayout>
+
+            <!-- Skills Required -->
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/textSkillsRequired"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="Skills Required" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="10dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:background="@android:color/white">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:orientation="horizontal">
+
+<!--                                    <com.google.android.material.chip.Chip-->
+<!--                                        android:layout_width="wrap_content"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:text="Data Structure And Algorithms"-->
+<!--                                        android:textSize="12sp"-->
+<!--                                        android:layout_marginHorizontal="5dp"-->
+<!--                                        />-->
+
+<!--                                    <com.google.android.material.chip.Chip-->
+<!--                                        android:layout_width="wrap_content"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:text="Java"-->
+<!--                                        android:layout_marginHorizontal="5dp"-->
+<!--                                        />-->
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <!-- Job Description -->
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Icon and Text -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ic_desc"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_description"
+                        android:layout_gravity="center_vertical"
+                        app:tint="@color/grey" />
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="Job Description"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+
+                <!-- Actual Location -->
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:lines="2"
+                    android:layout_height="wrap_content"
+                    android:text="Description" />
+
+            </LinearLayout>
+
+
+
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="20dp"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Company Name -->
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical">
+
+                    <!-- Icon and Text -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_company"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_company"
+                            android:layout_gravity="center_vertical"
+                            app:tint="@color/grey" />
+
+                        <TextView
+                            android:id="@+id/text_company_name_label"
+                            android:textStyle="bold"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Company Name"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Actual Company Name -->
+                    <TextView
+                        android:id="@+id/tvCompany"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:text="Google" />
+
+                </LinearLayout>
+
+                <!-- Contact Person -->
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Icon and Text -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image_contact"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/outline_person"
+                            android:layout_gravity="center_vertical"
+                            app:tint="@color/grey" />
+
+                        <TextView
+                            android:id="@+id/text_contact_person_label"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="Contact Person"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Actual Contact Person -->
+                    <TextView
+                        android:id="@+id/tvContact"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_height="wrap_content"
+                        android:text="Faaiz Sorathiya" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- Company Address -->
+            <TextView
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Company Address" />
+
+            <TextView
+                android:id="@+id/textCompanyAddress"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="30dp"
+                android:lines="2"
+                android:layout_height="wrap_content"
+                android:text="Company Address" />
+
+            <!-- Company Description -->
+            <TextView
+                android:textStyle="bold"
+                android:layout_marginLeft="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Company Description" />
+
+            <TextView
+                android:id="@+id/textCompanyDescription"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="30dp"
+                android:lines="2"
+                android:layout_height="wrap_content"
+                android:text="Company Description" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Fixed Bottom Bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_border"
+            android:text="Save"/>
+
+        <!-- Spacer to push Apply button to the right -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- Apply Button -->
+        <Button
+            android:id="@+id/btnApply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_border"
+            android:text="Apply"/>
+    </LinearLayout>
+</RelativeLayout>

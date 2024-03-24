@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:layout_margin="10dp"
+    android:id="@+id/jobItem"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- TextView for job role -->
+        <TextView
+            android:id="@+id/text_job_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/royalBlue"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:text="Software Developer" />
+
+        <!-- Company name -->
+        <TextView
+            android:id="@+id/text_company_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_job_role"
+            android:text="Accenture"
+            android:textSize="14sp" />
+
+        <!-- Three dots icon -->
+        <ImageView
+            android:id="@+id/three_dots"
+            android:layout_width="38dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_three_dots"
+            android:paddingHorizontal="10dp"
+            android:layout_marginStart="8dp" />
+
+        <!-- Job location -->
+        <LinearLayout
+            android:id="@+id/layout_location_experience"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@id/text_company_name"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_location"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/location_pin"
+                android:layout_gravity="center_vertical"
+                app:tint="@color/grey" />
+
+            <TextView
+                android:id="@+id/text_job_location"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Job Location"
+                android:layout_marginStart="8dp" />
+
+            <ImageView
+                android:id="@+id/image_experience"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/grey"
+                android:src="@drawable/suitcase"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/text_job_experience"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Job Experience"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- Min qualification -->
+        <LinearLayout
+            android:id="@+id/layout_qualification_salary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_location_experience"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_qualification"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/grey"
+                android:src="@drawable/ic_qualification"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/text_min_qualification"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Graduate or Above"
+                android:layout_marginStart="8dp" />
+
+            <ImageView
+                android:id="@+id/image_salary"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/grey"
+                android:src="@drawable/ic_rupee_symbol"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/text_salary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salary"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- Applications option -->
+        <TextView
+            android:id="@+id/text_applications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Applications"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:textStyle="bold"
+            android:paddingVertical="5dp"
+            android:textColor="@color/royalBlue"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="8dp" />
+
+        <!-- Edit option -->
+        <TextView
+            android:id="@+id/text_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textColor="@color/royalBlue"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

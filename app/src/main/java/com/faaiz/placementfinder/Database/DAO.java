@@ -13,6 +13,8 @@ import com.faaiz.placementfinder.User;
 
 import java.util.List;
 
+import kotlinx.coroutines.Job;
+
 @Dao
 public interface DAO {
 
@@ -60,6 +62,9 @@ public interface DAO {
     @Update
     void updateEmployer(Employer employer);
 
+    @Query("UPDATE employerTable SET profilePhotoUrl = :imageUrl")
+    void updateEmployerProfile(String imageUrl);
+
     @Query("UPDATE employerTable SET name = :name, mobile = :mobile, companyName = :companyName, companyAddress = :companyAddress, companyDescription = :companyDescription")
     void updateEmpCompDetails(String name, String mobile, String companyName, String companyAddress, String companyDescription);
 
@@ -68,6 +73,21 @@ public interface DAO {
     @Insert
     void insertJob(JobPost jobPost);
 
-    @Query("SELECT * FROM jobs")
+    @Query("SELECT * FROM jobs ORDER BY id DESC")
     List<JobPost> getAllJobPosts();
+
+    @Query("SELECT * FROM jobs WHERE id = :id")
+    JobPost getJobPost(int id);
+
+    @Query("UPDATE employerTable SET jobsPosted = :jobsPosted")
+    void updateJobId(List<String> jobsPosted);
+
+    @Update
+    void updateJobPost(JobPost jobPost);
+
+    @Delete
+    void deleteJobPost(JobPost job);
+
+    @Query("DELETE FROM jobs")
+    void deleteAllJobs();
 }

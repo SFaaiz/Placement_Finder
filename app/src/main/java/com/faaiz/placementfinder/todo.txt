@@ -2,3 +2,6 @@ clear sharedpreferences upon logout for userid, usertype, userprogress
 
 if a user has created an account as employer then he cant create account as employee and vice versa
 
+if employer deletes post then it should be removed from applied, saved
+
+fix fragment height

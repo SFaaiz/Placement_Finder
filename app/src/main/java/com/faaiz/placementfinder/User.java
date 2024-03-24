@@ -75,6 +75,28 @@ public class User {
     @ColumnInfo(name = "skills")
     private List<String> skills;
 
+    @ColumnInfo(name = "savedJobs")
+    private List<String> savedJobs;
+
+    @ColumnInfo(name = "appliedJobs")
+    private List<String> appliedJobs;
+
+    public List<String> getSavedJobs() {
+        return savedJobs;
+    }
+
+    public void setSavedJobs(List<String> savedJobs) {
+        this.savedJobs = savedJobs;
+    }
+
+    public List<String> getAppliedJobs() {
+        return appliedJobs;
+    }
+
+    public void setAppliedJobs(List<String> appliedJobs) {
+        this.appliedJobs = appliedJobs;
+    }
+
     public String getCompanyName() {
         return companyName;
     }

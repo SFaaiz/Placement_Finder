@@ -3,10 +3,8 @@ package com.faaiz.placementfinder.Jobs;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +14,19 @@ import com.faaiz.placementfinder.Database.RoomDB;
 import com.faaiz.placementfinder.JobPost;
 import com.faaiz.placementfinder.MainActivity;
 import com.faaiz.placementfinder.R;
-import com.faaiz.placementfinder.databinding.FragmentJobsBinding;
+import com.faaiz.placementfinder.databinding.FragmentAllJobsBinding;
+import com.faaiz.placementfinder.databinding.FragmentSavedJobsBinding;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link JobsFragment#newInstance} factory method to
+ * Use the {@link SavedJobsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JobsFragment extends Fragment {
+public class SavedJobsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,23 +37,30 @@ public class JobsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public JobsFragment() {
+    public SavedJobsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment SavedJobsFragment.
+     */
     // TODO: Rename and change types and number of parameters
-    public static JobsFragment newInstance(String message) {
-        JobsFragment fragment = new JobsFragment();
+    public static SavedJobsFragment newInstance(String param1, String param2) {
+        SavedJobsFragment fragment = new SavedJobsFragment();
         Bundle args = new Bundle();
-        args.putString("message", message);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-
-
     RoomDB roomDB;
     List<JobPost> jobPosts;
-    FragmentJobsBinding binding;
+    FragmentSavedJobsBinding binding;
     JobListAdapter jobListAdapter;
 
     @Override
@@ -67,42 +75,36 @@ public class JobsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentJobsBinding.inflate(inflater, container, false);
+        binding = FragmentSavedJobsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         updateJobList(jobPosts);
 
 
+
         return view;
     }
 
-    public void deleteJobPost(){
-
+    public void reloadFragment() {
+        FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
     }
 
-    public void loadFrag(Fragment f, String message) {
-        FragmentManager fm = requireActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-            f.setArguments(getArguments(message));
-            ft.replace(R.id.frame, f);
-
-        ft.commit();
-    }
-
-    private Bundle getArguments(String message) {
-        Bundle args = new Bundle();
-        args.putString("message", message);
-        return args;
-    }
 
     public void updateJobList(List<JobPost> list) {
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         JobClickListener jobClickListener = ((MainActivity) requireActivity()).jobClickListener;
-        jobListAdapter = new JobListAdapter(requireContext(),list,list,jobClickListener, "employer", false);
+
+        List<JobPost> temp = new ArrayList<>();
+        for(JobPost jobPost: list){
+            if(jobPost.isJobSaved()){
+                temp.add(jobPost);
+            }
+        }
+
+        jobListAdapter = new JobListAdapter(requireContext(),temp,temp,jobClickListener, "user", true);
         binding.recyclerView.setAdapter(jobListAdapter);
     }
-
 }

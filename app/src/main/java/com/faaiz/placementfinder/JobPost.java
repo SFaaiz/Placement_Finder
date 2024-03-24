@@ -36,11 +36,20 @@ public class JobPost {
     @ColumnInfo(name = "job_description")
     private String jobDescription;
 
+    @ColumnInfo(name = "company_name")
+    private String companyName;
+
+    @ColumnInfo(name = "employerId")
+    private String employerId;
+
+    @ColumnInfo(name  = "is_job_saved")
+    private boolean isJobSaved;
+
     public JobPost(){
 
     }
 
-    public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription) {
+    public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription, String companyName) {
         this.roleToHire = roleToHire;
         this.city = city;
         this.skillsRequired = skillsRequired;
@@ -49,6 +58,21 @@ public class JobPost {
         this.minExperience = minExperience;
         this.minQualification = minQualification;
         this.jobDescription = jobDescription;
+        this.companyName = companyName;
+        isJobSaved = false;
+    }
+
+    public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription, String companyName, String employerId) {
+        this.roleToHire = roleToHire;
+        this.city = city;
+        this.skillsRequired = skillsRequired;
+        this.minSalary = minSalary;
+        this.maxSalary = maxSalary;
+        this.minExperience = minExperience;
+        this.minQualification = minQualification;
+        this.jobDescription = jobDescription;
+        this.companyName = companyName;
+        this.employerId = employerId;
     }
 
     public int getId() {
@@ -57,6 +81,30 @@ public class JobPost {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmployerId() {
+        return employerId;
+    }
+
+    public void setEmployerId(String employerId) {
+        this.employerId = employerId;
+    }
+
+    public boolean isJobSaved() {
+        return isJobSaved;
+    }
+
+    public void setJobSaved(boolean jobSaved) {
+        isJobSaved = jobSaved;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getRoleToHire() {
