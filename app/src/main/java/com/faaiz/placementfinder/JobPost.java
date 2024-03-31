@@ -42,11 +42,35 @@ public class JobPost {
     @ColumnInfo(name = "employerId")
     private String employerId;
 
+    @ColumnInfo(name = "jobId")
+    private String jobId;
+
+    @ColumnInfo(name = "timeStamp")
+    private long timeStamp;
+
     @ColumnInfo(name  = "is_job_saved")
     private boolean isJobSaved;
 
+    @ColumnInfo(name  = "isJobApplied")
+    private boolean isJobApplied;
+
     public JobPost(){
 
+    }
+
+    public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription, String companyName, String employerId, String jobId, long timeStamp) {
+        this.roleToHire = roleToHire;
+        this.city = city;
+        this.skillsRequired = skillsRequired;
+        this.minSalary = minSalary;
+        this.maxSalary = maxSalary;
+        this.minExperience = minExperience;
+        this.minQualification = minQualification;
+        this.jobDescription = jobDescription;
+        this.companyName = companyName;
+        this.employerId = employerId;
+        this.jobId = jobId;
+        this.timeStamp = timeStamp;
     }
 
     public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription, String companyName) {
@@ -75,12 +99,50 @@ public class JobPost {
         this.employerId = employerId;
     }
 
+    public JobPost(String roleToHire, String city, List<String> skillsRequired, String minSalary, String maxSalary, String minExperience, String minQualification, String jobDescription, String companyName, String employerId, long timeStamp) {
+        this.roleToHire = roleToHire;
+        this.city = city;
+        this.skillsRequired = skillsRequired;
+        this.minSalary = minSalary;
+        this.maxSalary = maxSalary;
+        this.minExperience = minExperience;
+        this.minQualification = minQualification;
+        this.jobDescription = jobDescription;
+        this.companyName = companyName;
+        this.employerId = employerId;
+        this.timeStamp = timeStamp;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public boolean isJobApplied() {
+        return isJobApplied;
+    }
+
+    public void setJobApplied(boolean jobApplied) {
+        isJobApplied = jobApplied;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getEmployerId() {

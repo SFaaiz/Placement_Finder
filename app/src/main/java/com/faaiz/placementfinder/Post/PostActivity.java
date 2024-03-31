@@ -83,6 +83,7 @@ public class PostActivity extends AppCompatActivity {
             int position = getIntent().getIntExtra("position", -1);
             binding.saveBtn.setText("Update");
             updateJob = true;
+            binding.actvHire.setEnabled(false);
             fetchPost(position);
         }
 
@@ -201,8 +202,9 @@ public class PostActivity extends AppCompatActivity {
         String jobDescription = binding.etJobDescription.getText().toString();
 
         String companyName = roomDB.dao().getEmployer().getCompanyName();
+        long timeStamp = System.currentTimeMillis();
 
-        JobPost job = new JobPost(roleToHire, city, skillsRequired, minSalary, maxSalary, minExperience, minQualification, jobDescription, companyName, mAuth.getCurrentUser().getUid());
+        JobPost job = new JobPost(roleToHire, city, skillsRequired, minSalary, maxSalary, minExperience, minQualification, jobDescription, companyName, mAuth.getCurrentUser().getUid(), timeStamp);
 
 
         String jobIdTemp;

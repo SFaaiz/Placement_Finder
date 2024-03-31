@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     tools:context=".MainActivity">
-
-
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -20,67 +18,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:foregroundTint="@color/white"
             android:layout_width="match_parent"
             android:background="@color/royalBlue"
             android:layout_height="?attr/actionBarSize" >
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tb_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PlaceMate"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:layout_gravity=""
+            android:layout_marginStart="30dp"
+            android:maxLines="1"
+            android:textStyle="bold"/>
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/tb_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PlaceMate"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                android:layout_gravity=""
-                android:layout_marginStart="30dp"
-                android:maxLines="1"
-                android:textStyle="bold"/>
-
-            <ImageView
-                android:id="@+id/chat_icon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_chat"
-                android:layout_gravity="end"/>
-
-            <ImageView
-                android:id="@+id/notification_icon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_notification"
-                android:layout_gravity="end"/>
-        </androidx.appcompat.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout layout="@layout/fragment_home"
-        tools:ignore="ResourceCycle"
-        android:layout_width="match_parent"
-        android:layout_height="608dp"
-        app:layout_constraintTop_toBottomOf="@id/appBar"
-        app:layout_constraintBottom_toTopOf="@id/bnview"
+    <FrameLayout
         android:id="@+id/frame"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="?android:attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintBottom_toTopOf="@id/bnview">
+
+        <!-- Your Fragment Container -->
 
     </FrameLayout>
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnview"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:menu="@menu/bottom_nav_bar_main"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_anchor="@id/frame"
+        android:background="@color/white"
+        app:layout_anchorGravity="bottom"/>
 
-        />
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

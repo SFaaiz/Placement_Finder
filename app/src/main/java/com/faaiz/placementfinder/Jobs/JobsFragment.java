@@ -101,7 +101,7 @@ public class JobsFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         JobClickListener jobClickListener = ((MainActivity) requireActivity()).jobClickListener;
-        jobListAdapter = new JobListAdapter(requireContext(),list,list,jobClickListener, "employer", false);
+        jobListAdapter = new JobListAdapter(requireContext(),list,jobClickListener, "employer", false);
         binding.recyclerView.setAdapter(jobListAdapter);
     }
 

@@ -7,13 +7,25 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.faaiz.placementfinder.Database.RoomDB;
+import com.faaiz.placementfinder.JobPost;
+import com.faaiz.placementfinder.Jobs.JobClickListener;
+import com.faaiz.placementfinder.Jobs.JobListAdapter;
+import com.faaiz.placementfinder.MainActivity;
 import com.faaiz.placementfinder.R;
+import com.faaiz.placementfinder.User;
 import com.faaiz.placementfinder.databinding.FragmentHomeBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,13 +68,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        roomDB = RoomDB.getInstance(requireContext());
     }
 
     FragmentHomeBinding binding;
+    RoomDB roomDB;
+    JobListAdapter jobListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,10 +82,69 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-
-
-
+        tryFilterList();
 
         return view;
+    }
+
+    private void tryFilterList() {
+        List<JobPost> jobPosts = roomDB.dao().getAllJobPosts();
+        User user = roomDB.dao().getUser();
+
+        Log.d("FragmentHome", "Job posts: " + jobPosts);
+        Log.d("FragmentHome", "User: " + user);
+
+        if (jobPosts != null && user != null) {
+            List<JobPost> recommendedJobs = filterList(jobPosts, user);
+            Log.d("FragmentHome", "Recommended jobs: " + recommendedJobs);
+            updateJobList(recommendedJobs);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tryFilterList(); // Recursive call to try again after 1 second
+                }
+            }, 1000); // Retry after 1 second
+        }
+    }
+
+
+
+    public List<JobPost> filterList(List<JobPost> jobPosts, User user) {
+        List<String> skills = user.getSkills();
+        String jobTitle = user.getJobTitle();
+
+        System.out.println("jobposts size = " + jobPosts.size());
+        List<JobPost> recommended = new ArrayList<>();
+        for (JobPost jobPost : jobPosts) {
+            // Check if job title matches or contains the user's job title
+            if (jobPost.getRoleToHire().toLowerCase().contains(jobTitle.toLowerCase()) ||
+                    jobTitle.toLowerCase().contains(jobPost.getRoleToHire().toLowerCase())) {
+                recommended.add(jobPost);
+            } else {
+                // Check if any required skill matches the user's skills
+                List<String> requiredSkills = jobPost.getSkillsRequired();
+                for (String skill : skills) {
+                    if (requiredSkills.contains(skill)) {
+                        recommended.add(jobPost);
+                        break; // No need to check further if one skill matches
+                    }
+                }
+            }
+        }
+        System.out.println("recommended size " + recommended.size());
+        return recommended;
+    }
+
+
+
+    public void updateJobList(List<JobPost> list) {
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        JobClickListener jobClickListener = ((MainActivity) requireActivity()).jobClickListener;
+        jobListAdapter = new JobListAdapter(requireContext(),list,jobClickListener, "user", false);
+        binding.recyclerView.setAdapter(jobListAdapter);
+        binding.progressBar.setVisibility(View.GONE);
     }
 }

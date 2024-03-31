@@ -1,16 +1,20 @@
 package com.faaiz.placementfinder.Jobs;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.faaiz.placementfinder.R;
 import com.faaiz.placementfinder.databinding.FragmentUserJobBinding;
+import com.google.android.material.search.SearchBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -75,6 +79,7 @@ public class UserJobFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding =  FragmentUserJobBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         binding.viewPager.setAdapter(pagerAdapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
@@ -82,24 +87,33 @@ public class UserJobFragment extends Fragment {
         binding.tabLayout.getTabAt(0).setText("All Jobs");
         binding.tabLayout.getTabAt(1).setText("Saved");
 
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+
+        binding.searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), JobSearchActivity.class);
+                startActivity(i);
             }
+        });
 
+        binding.searchEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                // This method is called when a new page is selected (tab swiped)
-                // You can perform actions here based on the selected page
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onClick(View view) {
+                Intent i = new Intent(requireContext(), JobSearchActivity.class);
+                startActivity(i);
             }
         });
 
 
         return binding.getRoot();
     }
+
+    public void onSearchBarClicked(View view) {
+        // Handle the click event here
+        // For example, you can start an intent
+        Intent intent = new Intent(requireContext(), JobSearchActivity.class);
+        startActivity(intent);
+    }
+
 }

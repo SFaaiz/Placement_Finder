@@ -105,7 +105,10 @@ public class MainActivity extends AppCompatActivity {
             item.setVisible(false);
         }else{
             MenuItem item = menu.findItem(R.id.application); // Replace "your_item_id" with the ID of the item you want to hide
+            MenuItem home = menu.findItem(R.id.home); // Replace "your_item_id" with the ID of the item you want to hide
             item.setVisible(false);
+            home.setVisible(false);
+
         }
 
         goToJob = getIntent().getBooleanExtra("gotoJobs", false);
@@ -120,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
             updateSelectedItem(R.id.jobs);
         }
         else{
-            loadFrag(new HomeFragment());
+            if(userType.equals("employer")){
+                loadFrag(new JobsFragment());
+                updateSelectedItem(R.id.jobs);
+            }else{
+                loadFrag(new HomeFragment());
+            }
         }
 
 
@@ -207,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fetchAllJobPosts(){
+        System.out.println("inside fetchAllJobPosts");
         DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs");
         List<JobPost> jobPosts = new ArrayList<>();
 
@@ -222,10 +231,19 @@ public class MainActivity extends AppCompatActivity {
                 // Now jobPosts list contains all JobPost objects
                 // You can use this list as needed
 
+                List<String> appliedJobs =  roomDB.dao().getUser().getAppliedJobs();
+                if(appliedJobs == null){
+                    appliedJobs  = new ArrayList<>();
+                }
+
                 // Insert each job post into Room database
                 for (JobPost jobPost : jobPosts) {
                     // Insert jobPost into Room database using your DAO method
                     // For example:
+                    if(appliedJobs.contains(jobPost.getJobId())){
+                        System.out.println("applied job id = " + jobPost.getJobId());
+                        jobPost.setJobApplied(true);
+                    }
                     roomDB.dao().insertJob(jobPost);
                 }
             }
@@ -463,14 +481,23 @@ public class MainActivity extends AppCompatActivity {
         // Get the currently selected fragment
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame);
 
-        // Check if the current fragment is not the home fragment
-        if (!(currentFragment instanceof HomeFragment)) {
-            // Navigate to the home fragment
-            bnview.setSelectedItemId(R.id.home);
-        } else {
-            // Exit the app
-            super.onBackPressed();
+        if(userType.equals("user")){
+            if (!(currentFragment instanceof HomeFragment)) {
+                bnview.setSelectedItemId(R.id.home);
+            }else{
+                // Exit the app
+                super.onBackPressed();
+            }
+
+        }else{
+            if (!(currentFragment instanceof JobsFragment)){
+                bnview.setSelectedItemId(R.id.jobs);
+            }else{
+                super.onBackPressed();
+            }
+
         }
+
     }
     int n=0;
     public void loadFrag(Fragment f){

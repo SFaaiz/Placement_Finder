@@ -410,8 +410,21 @@
             android:background="@drawable/btn_border"
             android:text="Save"/>
 
+        <Button
+            android:id="@+id/btnCall"
+            android:drawableLeft="@drawable/baseline_local_phone_24"
+            android:drawableTint="@color/white"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="40dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/success"
+            android:layout_gravity="center_horizontal"
+            android:text="Call HR"/>
+
         <!-- Spacer to push Apply button to the right -->
         <Space
+            android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>

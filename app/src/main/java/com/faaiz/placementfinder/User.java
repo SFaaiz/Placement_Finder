@@ -8,11 +8,12 @@ import androidx.room.TypeConverter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 
 @Entity(tableName = "userTable")
-public class User {
+public class User implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 

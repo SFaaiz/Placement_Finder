@@ -3,6 +3,8 @@ package com.faaiz.placementfinder.Jobs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -43,11 +45,18 @@ public class ViewJobActivity extends AppCompatActivity {
         }
 
 
+
     }
 
     private void setJobData(int id){
 
         JobPost jobPost = roomDB.dao().getJobPost(id);
+        if(jobPost.isJobApplied()){
+            binding.btnApply.setVisibility(View.GONE);
+            binding.btnSave.setVisibility(View.GONE);
+            binding.space.setVisibility(View.GONE);
+            binding.btnCall.setVisibility(View.VISIBLE);
+        }
         binding.textJobRole.setText(jobPost.getRoleToHire());
         binding.textSalary.setText(jobPost.getMinSalary() + " - " + jobPost.getMaxSalary());
         binding.tvLocation.setText(jobPost.getCity());
@@ -66,6 +75,8 @@ public class ViewJobActivity extends AppCompatActivity {
             setCompanyDetails(jobPost.getEmployerId());
         }
 
+
+
     }
 
     private void setCompanyDetails(String employerId){
@@ -81,6 +92,17 @@ public class ViewJobActivity extends AppCompatActivity {
                         binding.tvContact.setText(employer.getName());
                         binding.textCompanyAddress.setText(employer.getCompanyAddress());
                         binding.textCompanyDescription.setText(employer.getCompanyDescription());
+
+                        binding.btnCall.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(employer.getMobile() != null){
+                                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                                    intent.setData(Uri.parse("tel:+91" + employer.getMobile().trim()));
+                                    startActivity(intent);
+                                }
+                            }
+                        });
                     }
                 }
             }
