@@ -217,6 +217,8 @@ public class PostActivity extends AppCompatActivity {
             jobIdTemp = UUID.randomUUID().toString();
         }
 
+        job.setJobId(jobIdTemp);
+
         saveJob(job,jobIdTemp);
 
 
