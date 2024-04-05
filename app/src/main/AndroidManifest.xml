@@ -20,6 +20,9 @@
         android:theme="@style/Theme.PlacementFinder"
         tools:targetApi="31">
         <activity
+            android:name=".AboutUs"
+            android:exported="false" />
+        <activity
             android:name=".Application.EmployerApplicationsActivity"
             android:exported="false" />
         <activity

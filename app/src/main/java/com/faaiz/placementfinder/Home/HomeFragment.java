@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        binding.progressBar.setVisibility(View.VISIBLE);
         tryFilterList();
 
         return view;
@@ -118,10 +119,11 @@ public class HomeFragment extends Fragment {
         List<JobPost> recommended = new ArrayList<>();
         for (JobPost jobPost : jobPosts) {
             // Check if job title matches or contains the user's job title
-            if (jobPost.getRoleToHire().toLowerCase().contains(jobTitle.toLowerCase()) ||
-                    jobTitle.toLowerCase().contains(jobPost.getRoleToHire().toLowerCase())) {
+
+            if (jobTitle!=null && (jobPost.getRoleToHire().toLowerCase().contains(jobTitle.toLowerCase()) ||
+                    jobTitle.toLowerCase().contains(jobPost.getRoleToHire().toLowerCase()))) {
                 recommended.add(jobPost);
-            } else {
+            } else if(skills != null && skills.size() != 0){
                 // Check if any required skill matches the user's skills
                 List<String> requiredSkills = jobPost.getSkillsRequired();
                 for (String skill : skills) {
@@ -133,6 +135,9 @@ public class HomeFragment extends Fragment {
             }
         }
         System.out.println("recommended size " + recommended.size());
+        if (recommended.size() == 0){
+            binding.tvNoRecommendations.setVisibility(View.VISIBLE);
+        }
         return recommended;
     }
 

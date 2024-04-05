@@ -103,6 +103,7 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Intent i = new Intent(PostActivity.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -217,6 +218,7 @@ public class PostActivity extends AppCompatActivity {
             jobIdTemp = UUID.randomUUID().toString();
         }
 
+        System.out.println("jobid = " + jobIdTemp);
         job.setJobId(jobIdTemp);
 
         saveJob(job,jobIdTemp);

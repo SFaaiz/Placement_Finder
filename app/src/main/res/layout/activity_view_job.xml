@@ -405,6 +405,7 @@
         <!-- Save Button -->
         <Button
             android:id="@+id/btnSave"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_border"

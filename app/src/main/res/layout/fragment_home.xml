@@ -26,6 +26,18 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
+    <TextView
+        android:id="@+id/tvNoRecommendations"
+        android:layout_below="@id/textAppliedJobs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Please Update your profile to find recommended Jobs"
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
+
     <RelativeLayout
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

@@ -375,11 +375,13 @@ public class LoginActivity extends AppCompatActivity {
             if (hasEnteredDetails) {
                 sp.saveUserProgress("mainActivity");
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } else {
                 sp.saveUserProgress("personalDetailsActivity");
                 // You can navigate to another activity or perform further actions here
                 Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
         });
@@ -439,10 +441,12 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "Data saved successfully for " + (isUser ? "user" : "employer"));
                 if(isUser){
                     Intent i = new Intent(LoginActivity.this, PersonalDetailsActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra("isGoogleRegistration", true);
                     startActivity(i);
                 }else{
                     Intent i = new Intent(LoginActivity.this, MobileVerificationActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                 }
                 finish();
@@ -495,16 +499,19 @@ public class LoginActivity extends AppCompatActivity {
         if(!isMobileVerified){
             sp.saveUserProgress("mobileVerificationActivity");
             Intent i = new Intent(LoginActivity.this, MobileVerificationActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }
         else if(!hasEnteredCompanyDetails){
             sp.saveUserProgress("companyDetailsActivity");
             Intent i = new Intent(LoginActivity.this, CompanyDetailsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }
         else{
             sp.saveUserProgress("mainActivity");
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }
         finish();

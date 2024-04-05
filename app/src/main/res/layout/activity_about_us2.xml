@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    tools:context=".AboutUs">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <TextView
+        android:paddingHorizontal="10dp"
+        android:justificationMode="inter_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="      Welcome to the Placement Finder App, your go-to destination for streamlining your job search journey. Created by Faaiz Sorathiya as part of my third-year project, My app is all about making job hunting easier and more efficient."
+        />
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="10dp"
+        android:justificationMode="inter_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="      At Placement Finder, we're all about simplicity and effectiveness. Our goal is to help you find the perfect placement with ease, whether you're a student seeking internships or a professional exploring new career opportunities."
+        />
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="10dp"
+        android:justificationMode="inter_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="      Driven by a passionate individual dedicated to your success, I am constantly innovating to provide you with the best tools and resources. Our user-friendly interface and intuitive features ensure that your job search experience is smooth and hassle-free."
+        />
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="10dp"
+        android:justificationMode="inter_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="      Thank you for choosing Placement Finder App. Let's find your perfect job together!"
+        />
+
+
+</LinearLayout>

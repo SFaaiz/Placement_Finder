@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.faaiz.placementfinder.Application.EmployerApplicationsActivity;
 import com.faaiz.placementfinder.Database.RoomDB;
+import com.faaiz.placementfinder.JobApplicationHelper;
 import com.faaiz.placementfinder.JobPost;
 import com.faaiz.placementfinder.Post.PostActivity;
 import com.faaiz.placementfinder.R;
@@ -207,81 +208,7 @@ public class JobListAdapter extends RecyclerView.Adapter<JobListAdapter.JobViewH
         });
     }
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                System.out.println("constraint = " + constraint);
-                String filterPattern = constraint.toString().toLowerCase().trim();
-                System.out.println("filter pattern = " + filterPattern);
-                FilterResults results = new FilterResults();
-
-                List<JobPost> filteredList = new ArrayList<>();
-
-                if (filterPattern.isEmpty()) {
-                    filteredList.addAll(listFull);
-                } else {
-                    for (JobPost post : listFull) {
-                        // Filtering logic based on roleToHire and companyName
-                        if ((post.getRoleToHire() != null && post.getRoleToHire().toLowerCase().contains(filterPattern)) ||
-                                (post.getCompanyName() != null && post.getCompanyName().toLowerCase().contains(filterPattern))) {
-                            filteredList.add(post);
-                        }
-                    }
-                }
-
-                for(JobPost j : filteredList){
-                    System.out.println(j.getCompanyName() + " , " + j.getRoleToHire());
-                }
-
-                // Sort the filtered list by timestamp in descending order
-                Collections.sort(filteredList, new Comparator<JobPost>() {
-                    @Override
-                    public int compare(JobPost o1, JobPost o2) {
-                        return Long.compare(o2.getTimeStamp(), o1.getTimeStamp());
-                    }
-                });
-
-                results.values = filteredList;
-                return results;
-            }
-
-
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                if (results != null && results.values != null) {
-                    System.out.println("Filter results = " + results.values);
-                    list.clear();
-//                    list.addAll((List<JobPost>) results.values);
-                    List<JobPost> temp = (List<JobPost>) results.values;
-
-                    for(JobPost j : temp){
-                        list.add(j);
-                    }
-                    notifyDataSetChanged();
-                }else{
-                    System.out.println("results are null");
-                }
-            }
-        };
-    }
-
-
-
-//    private void updateJobSaveStatus(int position, JobPost jobPost){
-//        User user = roomDB.dao().getUser();
-//        List<String> savedJobs = user.getSavedJobs();
-//        if(savedJobs == null) {
-//            savedJobs = new ArrayList<>();
-//        }
-//        if(jobPost.isJobSaved()){
-//            savedJobs.add()
-//        }
-//    }
-
-    private boolean checkProfileProgress(){
+    public boolean checkProfileProgress(){
         User user = roomDB.dao().getUser();
         if(user.getGrade()==null || user.getGrade().isEmpty() || user.getCompanyName()==null || user.getCompanyName().isEmpty() || user.getSkills()==null || user.getSkills().size()==0 || user.getProjectTitle()==null || user.getProjectTitle().isEmpty()){
             return false;
@@ -290,7 +217,7 @@ public class JobListAdapter extends RecyclerView.Adapter<JobListAdapter.JobViewH
         }
     }
 
-    public static void showProfileCompletionDialog(Context context) {
+    public void showProfileCompletionDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Complete Your Profile");
         builder.setMessage("Please complete your profile before applying for this job.");
@@ -369,7 +296,7 @@ public class JobListAdapter extends RecyclerView.Adapter<JobListAdapter.JobViewH
 
                             progressDialog.dismiss();
                             showAppliedForJobDialog(context, jobPost.getRoleToHire());
-                            notifyDataSetChanged();
+
 
                         }else{
                             progressDialog.dismiss();
@@ -410,13 +337,89 @@ public class JobListAdapter extends RecyclerView.Adapter<JobListAdapter.JobViewH
     }
 
 
-    public static void applyJobProgressDialog(Context context) {
+    public void applyJobProgressDialog(Context context) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Applying for job...");
         progressDialog.setCancelable(false); // Set to true if you want it to be cancelable
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Set the style of the ProgressDialog
         progressDialog.show();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                System.out.println("constraint = " + constraint);
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                System.out.println("filter pattern = " + filterPattern);
+                FilterResults results = new FilterResults();
+
+                List<JobPost> filteredList = new ArrayList<>();
+
+                if (filterPattern.isEmpty()) {
+                    filteredList.addAll(listFull);
+                } else {
+                    for (JobPost post : listFull) {
+                        // Filtering logic based on roleToHire and companyName
+                        if ((post.getRoleToHire() != null && post.getRoleToHire().toLowerCase().contains(filterPattern)) ||
+                                (post.getCompanyName() != null && post.getCompanyName().toLowerCase().contains(filterPattern))) {
+                            filteredList.add(post);
+                        }
+                    }
+                }
+
+                for(JobPost j : filteredList){
+                    System.out.println(j.getCompanyName() + " , " + j.getRoleToHire());
+                }
+
+                // Sort the filtered list by timestamp in descending order
+                Collections.sort(filteredList, new Comparator<JobPost>() {
+                    @Override
+                    public int compare(JobPost o1, JobPost o2) {
+                        return Long.compare(o2.getTimeStamp(), o1.getTimeStamp());
+                    }
+                });
+
+                results.values = filteredList;
+                return results;
+            }
+
+
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                if (results != null && results.values != null) {
+                    System.out.println("Filter results = " + results.values);
+                    list.clear();
+//                    list.addAll((List<JobPost>) results.values);
+                    List<JobPost> temp = (List<JobPost>) results.values;
+
+                    for(JobPost j : temp){
+                        list.add(j);
+                    }
+                    notifyDataSetChanged();
+                }else{
+                    System.out.println("results are null");
+                }
+            }
+        };
+    }
+
+
+
+//    private void updateJobSaveStatus(int position, JobPost jobPost){
+//        User user = roomDB.dao().getUser();
+//        List<String> savedJobs = user.getSavedJobs();
+//        if(savedJobs == null) {
+//            savedJobs = new ArrayList<>();
+//        }
+//        if(jobPost.isJobSaved()){
+//            savedJobs.add()
+//        }
+//    }
+
+
 
 
     private void deleteItem(int position, JobPost job) {

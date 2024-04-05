@@ -189,6 +189,10 @@ public class MainActivity extends AppCompatActivity {
                     showLogoutConfirmationDialog();
                     return true;
                 }
+                else if(id == R.id.about){
+                    Intent i = new Intent(MainActivity.this, AboutUs.class);
+                    startActivity(i);
+                }
                 return false;
             }
         });

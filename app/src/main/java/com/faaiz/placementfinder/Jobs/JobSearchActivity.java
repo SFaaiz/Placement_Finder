@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,6 +45,8 @@ public class JobSearchActivity extends AppCompatActivity {
             imm.showSoftInput(binding.searchView.findFocus(), InputMethodManager.SHOW_IMPLICIT);
         }
 
+        binding.recyclerView.setVisibility(View.INVISIBLE);
+
         roomDB = RoomDB.getInstance(this);
         jobPosts = roomDB.dao().getAllJobPosts();
 
@@ -58,6 +61,7 @@ public class JobSearchActivity extends AppCompatActivity {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                binding.recyclerView.setVisibility(View.VISIBLE);
                 // Perform searching based on query here
                 System.out.println("query = " + query);
                 jobListAdapter.getFilter().filter(query);
@@ -87,11 +91,4 @@ public class JobSearchActivity extends AppCompatActivity {
         }
     };
 
-    public void updateJobList(List<JobPost> list, String query) {
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        jobListAdapter = new JobListAdapter(this,list,jobClickListener, "user", false);
-        jobListAdapter.getFilter().filter(query);
-        binding.recyclerView.setAdapter(jobListAdapter);
-    }
 }
