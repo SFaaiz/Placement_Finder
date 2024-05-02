@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="phone"
-            android:hint="  Enter your mobile number"
+            android:hint="    Enter your mobile number"
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
             android:maxLength="10"
@@ -64,40 +64,40 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/otpContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_below="@id/mobileContainer">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/otpContainer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_below="@id/mobileContainer">-->
 
 
-        <EditText
-            android:id="@+id/etOtp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:textColor="@color/black"
-            android:textColorHint="@color/grey"
-            android:hint="Enter your OTP"
-            android:maxLength="10"
-            android:padding="12dp"/>
+<!--        <EditText-->
+<!--            android:id="@+id/etOtp"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:inputType="number"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textColorHint="@color/grey"-->
+<!--            android:hint="Enter your OTP"-->
+<!--            android:maxLength="10"-->
+<!--            android:padding="12dp"/>-->
 
-        <TextView
-            android:id="@+id/sendOtp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send OTP"
-            android:textColor="@color/white"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="14dp"
-            android:background="@color/royalBlue"
-            android:layout_marginLeft="10dp"
-            android:textSize="18sp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/sendOtp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Send OTP"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:paddingVertical="8dp"-->
+<!--            android:paddingHorizontal="14dp"-->
+<!--            android:background="@color/royalBlue"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:textSize="18sp"/>-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 
     <!-- Proceed Button -->
@@ -112,7 +112,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:padding="12dp"
-        android:layout_below="@id/otpContainer"
+        android:layout_below="@id/mobileContainer"
         />
 
     <!-- Progress Bar -->

@@ -61,46 +61,58 @@ public class MobileVerificationActivity extends AppCompatActivity {
         user_id = getUserId();
         firebaseUser = auth.getCurrentUser();
 
+
+//        binding.sendOtp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(!isCodeSent){
+//                    binding.progressBar.setVisibility(View.VISIBLE);
+//                }
+//                mobile = binding.etMobile.getText().toString();
+//                if(mobile.length() == 10){
+//
+//                    PhoneAuthOptions options =
+//                            PhoneAuthOptions.newBuilder(auth)
+//                                    .setPhoneNumber("+91" + mobile)       // Phone number to verify
+//                                    .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+//                                    .setActivity(MobileVerificationActivity.this)                 // (optional) Activity for callback binding
+//                                    // If no activity is passed, reCAPTCHA verification can not be used.
+//                                    .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+//                                    .build();
+//                    PhoneAuthProvider.verifyPhoneNumber(options);
+//                }else{
+//                    binding.etMobile.setError("Mobile Number should be 10 digit");
+//                    binding.etMobile.requestFocus();
+//                }
+//            }
+//        });
+
         binding.proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            }
-        });
-
-        binding.sendOtp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isCodeSent){
-                    binding.progressBar.setVisibility(View.VISIBLE);
-                }
-                mobile = binding.etMobile.getText().toString();
-                if(mobile.length() == 10){
-
-                    PhoneAuthOptions options =
-                            PhoneAuthOptions.newBuilder(auth)
-                                    .setPhoneNumber("+91" + mobile)       // Phone number to verify
-                                    .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                                    .setActivity(MobileVerificationActivity.this)                 // (optional) Activity for callback binding
-                                    // If no activity is passed, reCAPTCHA verification can not be used.
-                                    .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                                    .build();
-                    PhoneAuthProvider.verifyPhoneNumber(options);
+                String mobileNo = binding.etMobile.getText().toString();
+                if(isValidMobileNum(mobileNo)){
+                    proceedUser(mobileNo);
                 }else{
-                    binding.etMobile.setError("Mobile Number should be 10 digit");
-                    binding.etMobile.requestFocus();
+                    Toast.makeText(MobileVerificationActivity.this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        binding.proceedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String otp = binding.etOtp.getText().toString();
-                verifyOTP(mVerificationId, otp);
+//                verifyOTP(mVerificationId, otp);
             }
         });
 
 
+    }
+
+    private boolean isValidMobileNum(String number){
+        if(number.length() != 10){
+            return false;
+        }
+        for(char c : number.toCharArray()){
+            if(!Character.isDigit(c)){
+                return false;
+            }
+        }
+        return true;
     }
 
     private CompletableFuture<String> getMobile() {
@@ -150,7 +162,7 @@ public class MobileVerificationActivity extends AppCompatActivity {
             Log.d(TAG, "onVerificationCompleted:" + credential);
             binding.progressBar.setVisibility(View.GONE);
 
-            signInWithPhoneAuthCredential(credential);
+//            signInWithPhoneAuthCredential(credential);
         }
 
         @Override
@@ -191,60 +203,51 @@ public class MobileVerificationActivity extends AppCompatActivity {
         }
     };
 
-    private void verifyOTP(String verificationId, String otp) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otp);
-        signInWithPhoneAuthCredential(credential);
-    }
+//    private void verifyOTP(String verificationId, String otp) {
+//        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otp);
+//        signInWithPhoneAuthCredential(credential);
+//    }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+    private void proceedUser(String mobileNo) {
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("mobileVerified", true);
+        updates.put("mobile", mobileNo);
+
+        // update phone verification status
+        reference.child(user_id).updateChildren(updates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            Toast.makeText(MobileVerificationActivity.this, "Phone Verified Successfully", Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = task.getResult().getUser();
-                            String mobileNo = user.getPhoneNumber().substring(3);
-
-                            auth.updateCurrentUser(firebaseUser);
-
-                            Map<String, Object> updates = new HashMap<>();
-                            updates.put("mobileVerified", true);
-                            updates.put("mobile", mobileNo);
-
-                            // update phone verification status
-                            reference.child(user_id).updateChildren(updates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        MySharedPreferences sp = new MySharedPreferences(MobileVerificationActivity.this);
-                                        sp.saveUserProgress("companyDetailsActivity");
-                                        Log.d(TAG, "onComplete: Data has been updated");
-                                    } else {
-                                        Log.d(TAG, "onComplete: Failure " + task.getException());
-                                    }
-                                }
-                            });
-
-                            // Update UI
-                            Intent i = new Intent(MobileVerificationActivity.this, CompanyDetailsActivity.class);
-                            startActivity(i);
-                            finish();
+                            MySharedPreferences sp = new MySharedPreferences(MobileVerificationActivity.this);
+                            sp.saveUserProgress("companyDetailsActivity");
+                            Log.d(TAG, "onComplete: Data has been updated");
                         } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                                Toast.makeText(MobileVerificationActivity.this, "The verification code entered was invalid", Toast.LENGTH_SHORT).show();
-                            }
+                            Log.d(TAG, "onComplete: Failure " + task.getException());
                         }
                     }
                 });
+
+        // Update UI
+        Intent i = new Intent(MobileVerificationActivity.this, CompanyDetailsActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+//        auth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "signInWithCredential:success");
+//                            Toast.makeText(MobileVerificationActivity.this, "Phone Verified Successfully", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    }
+//                });
     }
 
 
 
-}

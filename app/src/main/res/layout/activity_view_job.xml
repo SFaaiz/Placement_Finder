@@ -171,8 +171,7 @@
                     android:id="@+id/tvQualification"
                     android:layout_width="wrap_content"
                     android:layout_marginLeft="24dp"
-                    android:layout_height="wrap_content"
-                    android:text="Graduation" />
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -255,7 +254,6 @@
                     android:id="@+id/tvDesc"
                     android:layout_width="wrap_content"
                     android:layout_marginLeft="24dp"
-                    android:lines="2"
                     android:layout_height="wrap_content"
                     android:text="Description" />
 
@@ -311,8 +309,7 @@
                         android:id="@+id/tvCompany"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:text="Google" />
+                        android:layout_marginLeft="30dp"/>
 
                 </LinearLayout>
 
@@ -350,8 +347,7 @@
                         android:id="@+id/tvContact"
                         android:layout_width="wrap_content"
                         android:layout_marginLeft="30dp"
-                        android:layout_height="wrap_content"
-                        android:text="Faaiz Sorathiya" />
+                        android:layout_height="wrap_content"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -386,7 +382,6 @@
                 android:id="@+id/textCompanyDescription"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="30dp"
-                android:lines="2"
                 android:layout_height="wrap_content"
                 android:text="Company Description" />
 

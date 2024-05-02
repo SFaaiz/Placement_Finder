@@ -240,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
                     appliedJobs  = new ArrayList<>();
                 }
 
+                List<JobPost> existingJobPosts = roomDB.dao().getAllJobPosts();
+                System.out.println("existing jobs = " + existingJobPosts.size());
+                for(JobPost jobPost : existingJobPosts){
+                    System.out.println(jobPost.getJobId() + " - " + jobPost.getRoleToHire());
+                }
+
                 // Insert each job post into Room database
                 for (JobPost jobPost : jobPosts) {
                     // Insert jobPost into Room database using your DAO method
@@ -248,6 +254,9 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("applied job id = " + jobPost.getJobId());
                         jobPost.setJobApplied(true);
                     }
+//                    jobPost.setId(0);
+                    System.out.println("jobId = "+ jobPost.getId());
+                    jobPost.setId(0);
                     roomDB.dao().insertJob(jobPost);
                 }
             }
